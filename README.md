@@ -35,3 +35,7 @@ resolve the conflicts if there is any
 commit your code again using same command and then push your code
 
 git push origin name_of_your_branch
+
+If you add new file then use this command before commit command
+
+git add "name_of_files separate by a space"
