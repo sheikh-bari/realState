@@ -41,4 +41,4 @@ git push origin name_of_your_branch
 
 If you add new file then use this command before commit command
 
-git add "name_of_files separate by a space"
+git add "name_of_files separate by a space.”
