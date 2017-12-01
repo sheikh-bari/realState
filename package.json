@@ -1,0 +1,34 @@
+{
+  "name": "realstate",
+  "version": "1.0.0",
+  "description": "APIs for real state web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com"
+  },
+  "keywords": [
+    "Restful",
+    "API"
+  ],
+  "author": "Abdul Bari",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "async": "^2.5.0",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.2",
+    "connect-multiparty": "^2.1.0",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "mysql2": "^1.4.2",
+    "request": "^2.83.0",
+    "sequelize": "^4.22.5",
+    "winston": "^2.4.0"
+  }
+}
