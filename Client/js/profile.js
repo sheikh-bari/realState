@@ -1,16 +1,21 @@
 $(document).ready(function() {
 
-var userInfo = getUserInfo();
+    var userInfo = getUserInfo();
 
-document.getElementById('profile-name').innerHTML = userInfo.FirstName+" "+userInfo.LastName;
+    if(userInfo){
+        loadAgentListings();
+        document.getElementById('profile-name').innerHTML = userInfo.FirstName+" "+userInfo.LastName;
+    }
+    else if(userInfo == undefined){
+        window.location.href = BASE_URL;
+    }
 
-var userType = userInfo.UserTypeId,
+    var userType = userInfo.UserTypeId,
     userId = userInfo.UserId;
 
-
-    function loadListings(){
+    function loadAgentListings(){
         getListings('', '', '', '', '', '').then(function(data){
-            $('.myprofile-content').load("partials/_listings.html", function(){
+            $('.myprofile-content').load("partials/_listingCard.html", function(){
                 if(data.success){
                     var response = data.data;
 
@@ -29,11 +34,31 @@ var userType = userInfo.UserTypeId,
                         template.find(".adImage")[0].innerHTML = "<img id=listing-image-"+i+" class='listing-image view-listing-details' src='" + response[i].AdMedia[0].ImagePath + "' data="+response[i].Id+" alt=''>";// <span class='four listing-price'>$"+response[i].Price+"</span>";
                         var exe = template.find(".adImage")[0];
 
+                        template.find(".actionBtns")[0].innerHTML = "<span id=editListing-"+i+" class='label label-primary edit-listing' data='" +response[i].Id+ "'>Edit</span>&nbsp;&nbsp;<span id=deleteListing-"+i+" class='label label-danger delete-listing' data='" +response[i].Id+ "'>Delete</span>"
+
                         // after adding all details appending the template
                         template.appendTo(".appendHere");
                     }
 
                     var listingDetailsLinks = document.getElementsByClassName("view-listing-details");
+                    var deleteListingLinks = document.getElementsByClassName("delete-listing");
+                    var editListingLinks = document.getElementsByClassName("edit-listing");
+
+                    for(var i=0;i < deleteListingLinks.length;i++) {
+                        deleteListingLinks[i].addEventListener("click", function() {
+                            var element = document.getElementById(this.id);
+                            var idx = element.getAttribute("data");
+                            deleteListing(idx);
+                        });
+                    };
+
+                    for(var i=0;i < editListingLinks.length;i++) {
+                        editListingLinks[i].addEventListener("click", function() {
+                            var element = document.getElementById(this.id);
+                            var idx = element.getAttribute("data");
+                            editListing(idx);
+                        });
+                    };
 
                     for(var i=0;i < listingDetailsLinks.length;i++) {
                         listingDetailsLinks[i].addEventListener("click", function() {
@@ -48,19 +73,10 @@ var userType = userInfo.UserTypeId,
             });
         });
     }
-    
-    if(userInfo){
-        
-        loadListings();
-    }
-    else if(userInfo == undefined){
-        window.location.href = BASE_URL;
-    }
-
 
     $('.myprofile-listings').click(function(){
 
-        loadListings();
+        loadAgentListings();
     })
 
     $('.myprofile-change-password').click(function(){
@@ -162,14 +178,11 @@ var userType = userInfo.UserTypeId,
         updateUserDetails(fname, lname, email, mnumber, userType, userId).then(function(data){
             console.log('response after updating profile=', data);
             var response = data;
-            
             if(response.success == false){
                 $("#error-msg").text(response.message);
             }
-
             else if(response){
                 localStorage.setItem('userInfo', JSON.stringify(response));
-
                 $( ".myprofile-content" ).load( "partials/_myListings.html", function() {
                     showToaster('Profile updated successfully', 'success');
                 });
@@ -178,7 +191,29 @@ var userType = userInfo.UserTypeId,
         });
     }
 
-    
+    function deleteListing(id){
+        console.log(id);
+        var deleteConfirm = confirm("Are you sure Do you want to delete ?");
+        if (deleteConfirm) {
+            console.log('deleted');
+            deleteAdListing(id).then(function(data){
+                if(response.success == false){
+                    
+                }
+                else if(response){
+                    showToaster('Profile updated successfully', 'success');
+                }
+            })
+        }
+        else {
+            console.log('not deleted');
+        }
+    };
+
+    function editListing(id){
+        console.log(id);
+        
+    };
 
 });
 
