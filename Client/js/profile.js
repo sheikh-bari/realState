@@ -64,7 +64,7 @@ $(document).ready(function() {
                         listingDetailsLinks[i].addEventListener("click", function() {
                             var element = document.getElementById(this.id);
                             var idx = element.getAttribute("data");
-                            //listingDetails(idx);
+                            listingDetails(idx);
                         });
                     };
                     apiCalled = false;
@@ -108,7 +108,15 @@ $(document).ready(function() {
     $('.add-new-listing').click(function(){
        
         $( ".myprofile-content" ).load( "partials/_addNewListing.html", function() {
-            
+            var createListingBtn = document.getElementsByClassName("listing-new-btn");
+                $('.listing-update-btn').css("display", "none");
+                for(var i=0;i < createListingBtn.length;i++) {
+                    createListingBtn[i].addEventListener("click", function() {
+                        var element = document.getElementById(this.id);
+                        var idx = element.getAttribute("data");
+                        createListing(idx);
+                    });
+                };
         });
     })    
     
@@ -141,11 +149,9 @@ $(document).ready(function() {
             if(response.success == false){
                 $("#error-msg").text(response.message);
             }
-            else if(response){
-                
-                $( ".myprofile-content" ).load( "partials/_myListings.html", function() {
-                    showToaster('Password changed successfully', 'success');
-                });
+            else if(response.success){
+                showToaster('Password changed successfully', 'success');
+                loadAgentListings();
             }
             
         });
@@ -181,13 +187,12 @@ $(document).ready(function() {
             if(response.success == false){
                 $("#error-msg").text(response.message);
             }
-            else if(response){
+            else if(response.success){
                 localStorage.setItem('userInfo', JSON.stringify(response));
-                $( ".myprofile-content" ).load( "partials/_myListings.html", function() {
-                    showToaster('Profile updated successfully', 'success');
-                });
+                showToaster('Profile updated successfully', 'success');
+                loadAgentListings();
             }
-           
+            
         });
     }
 
@@ -210,10 +215,163 @@ $(document).ready(function() {
         }
     };
 
+    function listingDetails(val){
+         var userInfo = getUserInfo();
+        console.log(val);
+        getListingDetails(val).then(function(response){
+            console.log(response);
+            if(document.getElementById("search-content"))
+            document.getElementById("search-content").style.display = "none";
+            // $("#search-content").style.display = "none";
+            $('.myprofile-content').load("partials/_listingDetails.html", function(){
+                
+                document.getElementsByClassName('listing-details-banner')[0].style.display = 'none';
+                $("#listing-heading").html(response.data.Title);
+
+                //document.getElementById('listing-heading').innerHTML = response.data.Title;
+                $('#listing-description').html(response.data.AdDescription);
+                $('#listing-beds').html(response.data.BedRooms);
+                $('#listing-baths').html(response.data.BathRooms);
+                $('#listing-area').html(response.data.SquareFeet);
+                $('#listing-parking').html(response.data.Parking);
+                $('#listing-price').html(response.data.Price);
+                $('#listing-kitchen').html(response.data.Kitchen);
+                $('#listing-type').html(response.data.AdType.AdTypeName);
+                $('#listing-address-street').html(response.data.Address);
+                $('#listing-address-city').html(response.data.City);
+                $('#listing-address-state').html(response.data.State);
+                $('#listing-address-zip').html(response.data.Zip);
+                document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
+                $('#agent-title').innerHTML=response.data.AgentName;
+                document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
+                document.getElementById('agent-picture').setAttribute("src", "images/te.jpg");
+                
+                // document.getElementById('listing-images').
+                var carousel = document.getElementsByClassName('listing-carousel-images');
+                console.log(carousel[0]);
+                    for(var i=1; i< response.data.AdMedia.length; i++){
+                    var newCarouselImage = document.createElement('div');
+                    newCarouselImage.setAttribute("class", "item");
+                    newCarouselImage.innerHTML = "<img src="+response.data.AdMedia[i].ImagePath+" alt='' style='width:100%;'>";
+                    console.log(newCarouselImage);
+                    
+                    carousel[0].appendChild(newCarouselImage);
+                };
+
+                if(userInfo){
+                    if(userInfo.UserTypeId == 2){
+                        $('.hide-agent-info').hide();
+                        $('.display-agent-info').hide();                        
+                    }
+                } else{
+                    $('.hide-agent-info').show();
+                    $('.display-agent-info').hide();                    
+                }
+            });
+        })
+
+    };
+
     function editListing(id){
         console.log(id);
-        
+       
+        getListingDetails(id).then(function(response){
+            console.log('details of listing =',response);
+                
+            $( ".myprofile-content" ).load( "partials/_addNewListing.html", function() {
+                $('#listing-title').val(response.data.Title);
+                $('#listing-description').val(response.data.AdDescription);
+                $('#listing-noOfBeds').val(response.data.BedRooms);
+                $('#listing-noOfBaths').val(response.data.BathRooms);
+                $('#listing-kitchen').val(response.data.Kitchen);
+                $('#listing-type').val(response.data.AdType.AdTypeName);
+                $('#listing-area').val(response.data.SquareFeet);
+                $('#listing-price').val(response.data.Price);
+                $('#listing-door').val(response.data.Address);
+                $('#listing-city').val(response.data.City);
+                $('#listing-state').val(response.data.State);
+                $('#listing-country').val(response.data.Country);
+                $('#listing-zip').val(response.data.Zip);
+                $('.listing-new-btn').css("display", "none");
+                $('.listing-update-btn').attr("data", response.data.ID);
+                $('.listing-update-btn').attr("id", 'listing-update-'+response.data.ID);
+                var updateListingBtn = document.getElementsByClassName("listing-update-btn");
+
+                for(var i=0;i < updateListingBtn.length;i++) {
+                    updateListingBtn[i].addEventListener("click", function() {
+                        var element = document.getElementById(this.id);
+                        var idx = element.getAttribute("data");
+                        updateListing(idx);
+                    });
+                };
+            });
+          
+        })
     };
+
+    function createListing(listingId){
+        console.log('listing id in updating =', listingId);
+        var data = {};
+        data.Titel = $('#listing-title').val();
+        data.AdDescription = $('#listing-description').val();
+        data.BedRooms = $('#listing-noOfBeds').val();
+        data.BathRooms = $('#listing-noOfBaths').val();
+        data.Kitchen = $('#listing-kitchen').val();
+        data.AdTypeName = $('#listing-type').val();
+        data.SquareFeet = $('#listing-area').val();
+        data.Price = $('#listing-price').val();
+        data.Address = $('#listing-door').val();
+        data.City = $('#listing-city').val();
+        data.State = $('#listing-state').val();
+        data.Country = $('#listing-country').val();
+        data.Zip = $('#listing-zip').val();
+
+        console.log( 'after editing =',data);
+        saveLisitng(data).then(function(data){
+           console.log('response after updating listing=', data);
+            var response = data;
+            if(response.success == false){
+                $("#error-msg").text(response.message);
+            }
+            else if(response.success){
+                showToaster('Listing created successfully', 'success');
+                loadAgentListings();
+            } 
+        })
+    }
+        
+
+    function updateListing(listingId){
+        console.log('listing id in updating =', listingId);
+        var data = {};
+        data.Titel = $('#listing-title').val();
+        data.AdDescription = $('#listing-description').val();
+        data.BedRooms = $('#listing-noOfBeds').val();
+        data.BathRooms = $('#listing-noOfBaths').val();
+        data.Kitchen = $('#listing-kitchen').val();
+        data.AdTypeName = $('#listing-type').val();
+        data.SquareFeet = $('#listing-area').val();
+        data.Price = $('#listing-price').val();
+        data.Address = $('#listing-door').val();
+        data.City = $('#listing-city').val();
+        data.State = $('#listing-state').val();
+        data.Country = $('#listing-country').val();
+        data.Zip = $('#listing-zip').val();
+
+        console.log( 'after editing =',data);
+        saveEditedLisitng(data).then(function(data){
+           console.log('response after updating listing=', data);
+            var response = data;
+            if(response.success == false){
+                $("#error-msg").text(response.message);
+            }
+            else if(response){
+                loadAgentListings();
+                showToaster('Listing updated successfully', 'success');
+            } 
+        })
+    }
+        
 
 });
 

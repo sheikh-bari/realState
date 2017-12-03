@@ -198,4 +198,46 @@ function deleteAdListing(listingId){
     return deferred.promise();  
 };
 
+function saveLisitng(data){
+     var _data = data;
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/user/update',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            
+            deferred.resolve(response);
+
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();  
+}
+
+function saveEditedLisitng(data, listingId){
+     var _data = data;
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/user/update',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            
+            deferred.resolve(response);
+
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();  
+}
+
 
