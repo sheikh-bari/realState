@@ -217,7 +217,7 @@ function saveLisitng(data){
         }
     });
     return deferred.promise();  
-}
+};
 
 function saveEditedLisitng(data, listingId){
      var _data = data;
@@ -238,6 +238,22 @@ function saveEditedLisitng(data, listingId){
         }
     });
     return deferred.promise();  
-}
+};
 
-
+function getAgentsList(){
+    
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/GetAgentListing',
+        method: 'GET',
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+};

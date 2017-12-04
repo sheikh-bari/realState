@@ -89,7 +89,12 @@
 				
 				<div style="text-align: center;">
 					<div>
-					<a href="javascript:" style="margin:0px" class="hvr-sweep-to-right more">MAKE AS FAVOURITE</a>
+					<a id="mark-favourite" href="javascript:" onclick="markFavourite(true)" style="margin:0px" class="hvr-sweep-to-right more">MARK AS FAVOURITE</a>
+					<div class="unmark-fav" style="display: none;">
+						<span id="fav-span">You have marked this property as favourite</span>
+						<a id="unmark-favourite" href="javascript:" onclick="markFavourite(false)" style="margin:0px" class="hvr-sweep-to-right more">REMOVE FAVOURITE</a>	
+					</div>
+					
 				</div><br>
 					<h4>AGENT INFO</h4><br>
 					<div>

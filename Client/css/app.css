@@ -576,3 +576,39 @@ div.cell {
 .myprofile-content{
   padding-top:20px;
 }
+
+
+.agent-title, .agent-image{
+  cursor: pointer;
+}
+
+.realEstateAgent{
+  border: 1px solid lightgrey;
+
+  margin:15px 0px;
+
+}
+
+.agentImage{
+  text-align: center;
+}
+
+.agent-image{
+  width:100%;
+  height: 185px;
+}
+.agentCardDetails{
+  font-size: 11.5px;
+  
+}
+.agentCardsAttribute{
+  color: grey;
+  padding: 0px 10px 0px 11px !important;
+}
+.agentCardsValue{
+  color: darkgrey;
+  padding: 0px 10px 0px 10px !important;
+}
+.realEstateAgents{
+  display: inline-flex;
+}

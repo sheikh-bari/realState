@@ -76,6 +76,7 @@ $(window).load(function() {
 
         $("#body-content").load("partials/_homeBody.html", function(){
             searchListings('');
+           //loadAgents();
         })
 
         $( "#footer-content" ).load( "partials/_footer.html", function() {
@@ -139,6 +140,21 @@ $(window).load(function() {
 
     };
 
+    function loadAgents(){
+        getAgentsList().then(function(data){
+        console.log(data);
+        //var userInfo = getUserInfo();
+        var response = data;
+        if(response.success){
+            var agentList = response.data;
+            $("#agentCard").loadTemplate('../html/partials/_agentCard.html', agentList, { append: true, elemPerPage: 10 });            
+        }
+        else{
+            $("#error-msg").text(response.message);
+        }
+    });
+    }
+
 
    
     function listingDetails(val){
@@ -185,14 +201,26 @@ $(window).load(function() {
                     carousel[0].appendChild(newCarouselImage);
                 };
 
+                $('#mark-favourite').hide();
+
                 if(userInfo){
                     if(userInfo.UserTypeId == 2){
                         $('.hide-agent-info').hide();
                         $('.display-agent-info').hide();                        
                     }
+                    else{
+                        if($.inArray( userInfo.UserId , response.data.FavouriteIds) < 0){
+                            $('#mark-favourite').show();
+                            $('#unmark-favourite').hide();
+                        }
+                        else{
+                            $('#mark-favourite').hide();
+                            $('#unmark-favourite').show();
+                        }
+                    }
                 } else{
                     $('.hide-agent-info').show();
-                    $('.display-agent-info').hide();                    
+                    $('.display-agent-info').hide();  
                 }
             });
         })
