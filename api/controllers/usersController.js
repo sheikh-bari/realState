@@ -82,6 +82,7 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
     logger.info('Inside get /api/GetAllMessages');
 
     var me = this;
+    console.log(req.query.conversationID);
     var response = {
       success: false
     };
@@ -98,14 +99,14 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
              
       } else {
         logger.info ( STRINGS.RESULT_SUCCESS );
-        response.message = STRINGS.PASSWORD_INCORRECT;
+        response.message = STRINGS.AGENTS_RETEREIVE_FAILED;
         response.data = null;
         res.status( HTTP.OK ).jsonp( response );
       }
     }).catch(function(err) {
       console.log(err);
       logger.info(STRINGS.RESULT_FAILED);
-      response.message = STRINGS.AGENTS_RETEREIVE_FAILED;
+      response.message = STRINGS.ERROR_MESSAGE;
       response.data = err;
       res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
     });
