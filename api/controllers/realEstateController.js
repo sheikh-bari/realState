@@ -282,6 +282,65 @@ var listing = module.exports = {};
     } 
   });
 
+  /**
+   * @api {post}  /api/favoriteListing  Adding/Deleting new Listing.
+   * @apiName favoriteListing
+   * @apiGroup Listing
+   *
+   * @apiSuccess (Success) {JSON} new listing.
+   */
+
+  app.post('/api/favoriteListing', function InsertUserCallback( req, res ) {
+    logger.info('Inside post /api/Listing');
+
+    var date = new Date();
+
+    console.log(req.body.Status);
+    console.log(req.body.UserID);
+    console.log(req.body.AdID);
+    var flag = req.body.Status;
+    if(flag){
+      models.FavouriteAds.create({
+        RealEstateAdID: req.body.AdID,
+        UserUserId: req.body.UserID,
+      }).then(function(fav) {
+          logger.info ( STRINGS.RESULT_SUCCESS );
+          response.success = true;
+          response.message = STRINGS.FAVORITE_ADDED
+          response.data = fav;
+          res.status( HTTP.OK ).jsonp( fav );
+      }).catch(function(err) {
+          logger.info ( err );
+          response.message = STRINGS.ERROR_MESSAGE;
+          response.data = null;
+          res.status( HTTP.OK ).jsonp( err );
+      });
+    }else{
+      models.sequelize.query(" delete from `fa17g19`.`favouriteads` where `RealEstateAdID = " + AdID + " and `UserUserId` = " + UserID, 
+      { type: models.sequelize.QueryTypes.SELECT}).then(favorite => {    
+        if(favorite !== null && favorite !== '') {
+          // console.log(message.ConversationID);
+          logger.info ( STRINGS.RESULT_SUCCESS );
+          response.success = true;
+          response.message = STRINGS.FAVORITE_DELETED
+          response.data = favorite;
+          res.status( HTTP.OK ).jsonp( favorite );         
+        } else {
+          logger.info ( STRINGS.RESULT_SUCCESS );
+          response.message = STRINGS.ERROR_MESSAGE;
+          response.data = null;
+        }
+      }).catch(function(err) {
+        console.log(err);
+        logger.info(STRINGS.RESULT_FAILED);
+        response.message = STRINGS.ERROR_MESSAGE;
+        response.data = err;
+        res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+      });
+    }
+
+  });
+
 
   /**
    * @api {post}  /api/listing  insert new Listing.
