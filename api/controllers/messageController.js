@@ -7,8 +7,6 @@
 
 
 const fs = require('fs');
-const nodemailer = require('nodemailer');
-const xoauth2 = require('xoauth2');
 
 var message = module.exports = {};
 
