@@ -12,7 +12,7 @@ const xoauth2 = require('xoauth2');
 
 var message = module.exports = {};
 
-message.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bcrypt, config, OP) {
+message.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bcrypt, config, OP , nodemailer) {
 
 
   /**
@@ -27,47 +27,36 @@ message.setup = function user(app, logger, STRINGS, HTTP, models, http, request,
 
     var date = new Date();
     console.log(req.body.email);
-
+    console.log(req.body.subject);
+    console.log(req.body.url);
+    console.log(req.body.name);
     var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        xoauth2: xoauth2.createXOAuth2Genrator({
-          user : 'develop.android.apps01@gmail.com',
-          clientId: '204555611688-0a1hhu30rhfdogkg40442jm0839akt5n.apps.googleusercontent.com',
-          clientSecret: 'p_r3YtxK4l-rroZdWwtAlnk8',
-          refreshToken: ''
-        })
-      }
-    })
-
-    var mailOptions= {
-      from: 'Group15&19 <develop.android.apps01@gmail.com>'
+     service: 'gmail',
+     auth: {
+            user: 'omer.aslamteam@gmail.com',
+            pass: 'omerAslam12'
+        }
+    });
+    
+    const mailOptions = {
+      from: 'Group 15 & 19 <omer.aslamteam@gmail.com>', 
       to: req.body.email,
       subject: req.body.subject,
-      text: 'This is a perfect house for purchasing. Feel free to contact with the Agent \n \n ' + req.body.url;
-    }
+      html: "<p> Mr "+ req.body.name+" refer this property to you <br> This is a perfect house for purchasing. Feel free to contact with the Agent <br> <br></p> <a href='" + req.body.url + "'>"
+    };
 
-    transporter.sendMail(mailOptions, function (err, res){
-      if (err) {
+    transporter.sendMail(mailOptions, function (err, info) {
+      if(err){
         console.log(err);
+        logger.info(STRINGS.RESULT_FAILED);
+        response.message = STRINGS.ERROR_MESSAGE;
+        res.status( HTTP.OK ).jsonp( err );
       }else{
-        console.log('Email');
-      }
-
-    })
-
-    models.User.create({
-      username: req.body.username,
-      createdAt: date.now,
-      updatedAt: date.now,
-    }).then(function(user) {
-      logger.info ( STRINGS.RESULT_SUCCESS );
-      res.status( HTTP.OK ).jsonp( user );
-    }).catch(function(err) {
-      logger.info(STRINGS.RESULT_FAILED);
-      res.status( HTTP.OK ).jsonp( err );
-    });
-
+        logger.info ( STRINGS.RESULT_SUCCESS );
+        response.message = STRINGS.RESULT_SUCCESS;
+        res.status( HTTP.OK ).jsonp( info );
+      }    
+    });  
   });
 
   /**
