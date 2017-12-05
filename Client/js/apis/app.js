@@ -200,14 +200,21 @@ function deleteAdListing(listingId){
 
 function saveLisitng(data){
     console.log('data before api call',data);
-     var _data = data;
+    var formData = new FormData();
+    formData.append('image', $('input[type=file]')[0].files[0]); 
+    for ( var key in data ) {
+        formData.append(key, data[key]);
+    }
+    //var _data = data;
     var deferred = new $.Deferred();
     $.ajax({
         url: API_ENDPOINT+'api/listing/create',
         method: 'POST',
-        data: JSON.stringify(_data),
-        dataType: "json",
-        contentType: 'application/json',
+        processData: false, // important
+        contentType: false,
+        data: formData,//JSON.stringify(_data),
+        //dataType: "json",
+        //contentType: 'application/json',
         success: function (response) {
             
             deferred.resolve(response);

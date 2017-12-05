@@ -340,7 +340,7 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
-        data.Images = listingFiles;
+        //data.Images = listingFiles;
 
         console.log( 'after creating =',data);
         saveLisitng(data).then(function(data){
@@ -393,8 +393,7 @@ $(document).ready(function() {
 
 var listingFiles = [];
 function checkUploadedFile(){
-
-        var x = document.getElementById("listing-fileUpload");
+        var x = this//document.getElementById("listing-fileUpload");
         var txt = "";
         if ('files' in x) {
             console.log(x.files);

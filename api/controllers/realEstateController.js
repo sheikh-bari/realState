@@ -338,6 +338,12 @@ var listing = module.exports = {};
    });
 
 
+  app.post('/api/listing/create',function(req,res){
+    
+  });
+
+
+
   /**
    * @api {post}  /api/listing  Update existing Listing.
    * @apiName UpdateListing
