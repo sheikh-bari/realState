@@ -199,10 +199,11 @@ function deleteAdListing(listingId){
 };
 
 function saveLisitng(data){
+    console.log('data before api call',data);
      var _data = data;
     var deferred = new $.Deferred();
     $.ajax({
-        url: API_ENDPOINT+'api/user/update',
+        url: API_ENDPOINT+'api/listing/create',
         method: 'POST',
         data: JSON.stringify(_data),
         dataType: "json",
