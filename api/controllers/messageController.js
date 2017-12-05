@@ -4,12 +4,71 @@
  * @author Copyright Saud Bin Habib
  */
 
+
+
 const fs = require('fs');
+const nodemailer = require('nodemailer');
+const xoauth2 = require('xoauth2');
 
 var message = module.exports = {};
 
 message.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bcrypt, config, OP) {
 
+
+  /**
+   * @api {post}  /api/referListing  Refer Listing.
+   * @apiName referListing
+   * @apiGroup MessageController
+   *
+   * @apiSuccess (Success) {JSON} new users.
+   */
+  app.post('/api/referListing', function InsertUserCallback( req, res ) {
+    logger.info('Inside post /api/messageController');
+
+    var date = new Date();
+    console.log(req.body.email);
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        xoauth2: xoauth2.createXOAuth2Genrator({
+          user : 'develop.android.apps01@gmail.com',
+          clientId: '204555611688-0a1hhu30rhfdogkg40442jm0839akt5n.apps.googleusercontent.com',
+          clientSecret: 'p_r3YtxK4l-rroZdWwtAlnk8',
+          refreshToken: ''
+        })
+      }
+    })
+
+    var mailOptions= {
+      from: 'Group15&19 <develop.android.apps01@gmail.com>'
+      to: req.body.email,
+      subject: req.body.subject,
+      text: 'This is a perfect house for purchasing. Feel free to contact with the Agent \n \n ' + req.body.url;
+    }
+
+    transporter.sendMail(mailOptions, function (err, res){
+      if (err) {
+        console.log(err);
+      }else{
+        console.log('Email');
+      }
+
+    })
+
+    models.User.create({
+      username: req.body.username,
+      createdAt: date.now,
+      updatedAt: date.now,
+    }).then(function(user) {
+      logger.info ( STRINGS.RESULT_SUCCESS );
+      res.status( HTTP.OK ).jsonp( user );
+    }).catch(function(err) {
+      logger.info(STRINGS.RESULT_FAILED);
+      res.status( HTTP.OK ).jsonp( err );
+    });
+
+  });
 
   /**
    * @api {Post}  /api/PostMessage  Send Message.
