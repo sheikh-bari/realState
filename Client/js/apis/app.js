@@ -201,10 +201,14 @@ function deleteAdListing(listingId){
 function saveLisitng(data){
     console.log('data before api call',data);
     var formData = new FormData();
-    formData.append('image', $('input[type=file]')[0].files[0]); 
+    
+    for(var i = 0; i < $('input[type=file]')[0].files.length; i++){
+        formData.append('image'+i, $('input[type=file]')[0].files[i]);
+    }
     for ( var key in data ) {
         formData.append(key, data[key]);
     }
+    console.log('formdata =',formData);
     //var _data = data;
     var deferred = new $.Deferred();
     $.ajax({

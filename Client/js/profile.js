@@ -360,7 +360,7 @@ $(document).ready(function() {
     function updateListing(listingId){
         console.log('listing id in updating =', listingId);
         var data = {};
-        data.Titel = $('#listing-title').val();
+        data.Title = $('#listing-title').val();
         data.AdDescription = $('#listing-description').val();
         data.BedRooms = $('#listing-noOfBeds').val();
         data.BathRooms = $('#listing-noOfBaths').val();
@@ -373,9 +373,6 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
-
-
-        console.log( 'after editing =',data);
         saveEditedLisitng(data).then(function(data){
            console.log('response after updating listing=', data);
             var response = data;
@@ -396,7 +393,8 @@ function checkUploadedFile(){
         var x = this//document.getElementById("listing-fileUpload");
         var txt = "";
         if ('files' in x) {
-            console.log(x.files);
+
+            console.log(x.files,'=========',x);
             if (x.files.length == 0) {
                 txt = "Select one or more files.";
             } else {
