@@ -233,6 +233,10 @@ var listing = module.exports = {};
           {
             model: models.AdMedia,
             attributes: ['ImagePath']
+          },
+          {
+            model: models.FavouriteAds,
+            attributes: ['UserUserId']
           }
         ]
       }).then(listing => {
@@ -395,12 +399,6 @@ var listing = module.exports = {};
     });
 
    });
-
-
-  app.post('/api/listing/create',function(req,res){
-    
-  });
-
 
 
   /**
