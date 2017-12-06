@@ -214,12 +214,10 @@ $(window).load(function() {
                         $('.display-agent-info').hide();   
                         $('.mark-as-favourite').hide(); 
                         $('.login-message').hide();                    
-                    }else{
-                        $('.login-message').hide();
-                        $('.mark-as-favourite').show();   
                     }
                     else{
                         $('.display-agent-info').show(); 
+                        $('.login-message').hide();
                         if($.inArray( userInfo.UserId , response.data.FavouriteIds) < 0){
                             $('#mark-favourite').show();
                             $('#unmark-fav').hide();
