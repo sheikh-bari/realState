@@ -37,8 +37,11 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
   app.get('/api/users', function getUsersCallback( req, res ) {
     logger.info('Inside get /api/users');
 
+
     var response = {};
-    models.User.findAll().then(users => {
+    models.User.findAll({
+      where: { UserTypeId: {[OP.eq]: req.query.usertypeid}}
+    }).then(users => {
       logger.info ( STRINGS.RESULT_SUCCESS );
       res.status( HTTP.OK ).jsonp( users );
     }).catch(function(err) {
@@ -87,7 +90,7 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
       success: false
     };
 
-    models.sequelize.query(" SELECT u.UserId, u.UserImagePath, u.UserName, concat(u.FirstName, ' ', u.LastName) as AgentName, u.Email,  u.Address, u.MobileNumber, c.CompanyName,c.id as CompanyID FROM `fa17g19`.`realestatecompanies` as c inner join `fa17g19`.`Users` as u on u.RealEstateCompanyID = c.Id where u.UserTypeId = 2;", 
+    models.sequelize.query(" SELECT u.UserId, u.UserImagePath , u.UserName, concat(u.FirstName, ' ', u.LastName) as AgentName, u.Email,  u.Address, u.MobileNumber, c.CompanyName,c.id as CompanyID FROM `fa17g19`.`realestatecompanies` as c inner join `fa17g19`.`Users` as u on u.RealEstateCompanyID = c.Id where u.UserTypeId = 2;", 
     { type: models.sequelize.QueryTypes.SELECT}).then(agent => {    
       if(agent !== null && agent !== '') {
         // console.log(agent.ConversationID);
