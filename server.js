@@ -87,7 +87,7 @@ models.sequelize.sync().then(function() {
 
     // Setup realEstate controller
     var realEstateController = require( __dirname + '/api/controllers/realEstateController' );
-    realEstateController.setup( app, logger, STRINGS, HTTP, models, http, request, models.OP );
+    realEstateController.setup( app, logger, STRINGS, HTTP, models, http, request, models.OP, config );
 
     // Setup message controller
     var messageController = require( __dirname + '/api/controllers/messageController' );

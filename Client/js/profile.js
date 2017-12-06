@@ -327,7 +327,7 @@ $(document).ready(function() {
     function createListing(){
        
         var data = {};
-        data.Titel = $('#listing-title').val();
+        data.Title = $('#listing-title').val();
         data.AdDescription = $('#listing-description').val();
         data.BedRooms = $('#listing-noOfBeds').val();
         data.BathRooms = $('#listing-noOfBaths').val();
@@ -340,6 +340,7 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+        data.AgentId = userInfo.UserId;
         //data.Images = listingFiles;
 
         console.log( 'after creating =',data);
