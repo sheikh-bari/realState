@@ -36,7 +36,7 @@ message.setup = function user(app, logger, STRINGS, HTTP, models, http, request,
       from: 'Group 15 & 19 <omer.aslamteam@gmail.com>', 
       to: req.body.email,
       subject: req.body.subject,
-      html: "<p> Mr "+ req.body.name+" refer this property to you <br> This is a perfect house for purchasing. Feel free to contact with the Agent <br> <br></p> <a href='" + req.body.url + "'>"
+      html: "<p> Mr "+ req.body.name+" refer this property to you <br> This is a perfect house for purchasing. Feel free to contact with the Agent <br> <br></p> To visit the ad, please <a href='" + req.body.url + "'>click here</a>"
     };
 
     transporter.sendMail(mailOptions, function (err, info) {

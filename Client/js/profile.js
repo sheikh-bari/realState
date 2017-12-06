@@ -170,7 +170,8 @@ $(document).ready(function() {
         var fname = $("#firstname").val(),
         lname = $("#lastname").val(),
         email = $("#email").val(),
-        mnumber = $("#mobilenumber").val();
+        mnumber = $("#mobilenumber").val(),
+        address = $("#address").val();
 
         if(fname == "" || fname === undefined){
             $("#error-msg").text("Please enter first name");
@@ -184,12 +185,13 @@ $(document).ready(function() {
             $("#error-msg").text("Please confirm email ");
             return;
         }
-        if(mnumber != mnumber){
+        if(mnumber == "" || mnumber === undefined){
             $("#error-msg").text("Please enter mobile number");
             return;
         }
 
-        updateUserDetails(fname, lname, email, mnumber, userType, userId).then(function(data){
+
+        updateUserDetails(fname, lname, email, mnumber, address, userId).then(function(data){
             console.log('response after updating profile=', data);
             var response = data;
             if(response.success == false){
