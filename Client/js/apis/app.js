@@ -257,3 +257,41 @@ function getAgentsList(){
     });
     return deferred.promise();
 };
+
+function markUnmarkListing(listingId, mark, userId){
+    var _data = { listingid : listingId, markval : mark, userid: userId };
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/markunmarklisting',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+}
+
+function referListing(name, toEmail, description, url){
+    var _data = { name : name, toemail : toEmail, description: description, url: url };
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/referlisting',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+}

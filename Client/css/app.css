@@ -1,5 +1,5 @@
 .searchBox{
-	width: 70%;
+  width: 70%;
     padding: 11px;
     font-size: large;
     border: solid 2px #27da93;
@@ -14,49 +14,49 @@
 }
 
 .home-caption{
-	
-  	left: 37%;
+  
+    left: 37%;
 }
 .home-caption h3{
-	color: #fff;
-	font-size: 3em;
-  	text-transform: uppercase;
-  	display: inline-block;
-  	font-family: 'Montserrat-Regular';
-  	padding: 0 0 0.3em;
+  color: #fff;
+  font-size: 3em;
+    text-transform: uppercase;
+    display: inline-block;
+    font-family: 'Montserrat-Regular';
+    padding: 0 0 0.3em;
 }
 .home-caption h3 span{
-	border-bottom: 7px solid #27DA93;
+  border-bottom: 7px solid #27DA93;
 }
 .home-caption p{
-	color: #fff;
-	font-size: 1.7em;
-	margin: 0.5em 0em 0;
+  color: #fff;
+  font-size: 1.7em;
+  margin: 0.5em 0em 0;
 }
 
 .caption{
-	position: absolute;
-	top: 43%;
-  	left: 13%;
+  position: absolute;
+  top: 43%;
+    left: 13%;
 }
 .caption h3{
-	color: #fff;
-	font-size: 3em;
-  	text-transform: uppercase;
-  	display: inline-block;
-  	font-family: 'Montserrat-Regular';
-  	padding: 0 0 0.3em;
+  color: #fff;
+  font-size: 3em;
+    text-transform: uppercase;
+    display: inline-block;
+    font-family: 'Montserrat-Regular';
+    padding: 0 0 0.3em;
 }
 .caption h3 span{
-	border-bottom: 7px solid #27DA93;
+  border-bottom: 7px solid #27DA93;
 }
 .caption p{
-	color: #fff;
-	font-size: 1.7em;
-	margin: 0.5em 0em 0;
+  color: #fff;
+  font-size: 1.7em;
+  margin: 0.5em 0em 0;
 }
-.listing-title, .listing-image, .delete-listing, .edit-listing{
-	cursor: pointer;
+.listing-title, .listing-image{
+  cursor: pointer;
 }
 
 .searchIdx{
@@ -75,8 +75,8 @@
 }
 
 .listing-image{
-  width:100%;
-  height: 185px;
+  width:89%;
+  height: 175px;
 }
 .adCardDetails{
   font-size: 11.5px;
@@ -575,40 +575,4 @@ div.cell {
 
 .myprofile-content{
   padding-top:20px;
-}
-
-
-.agent-title, .agent-image{
-  cursor: pointer;
-}
-
-.realEstateAgent{
-  border: 1px solid lightgrey;
-
-  margin:15px 0px;
-
-}
-
-.agentImage{
-  text-align: center;
-}
-
-.agent-image{
-  width:100%;
-  height: 185px;
-}
-.agentCardDetails{
-  font-size: 11.5px;
-  
-}
-.agentCardsAttribute{
-  color: grey;
-  padding: 0px 10px 0px 11px !important;
-}
-.agentCardsValue{
-  color: darkgrey;
-  padding: 0px 10px 0px 10px !important;
-}
-.realEstateAgents{
-  display: inline-flex;
 }
