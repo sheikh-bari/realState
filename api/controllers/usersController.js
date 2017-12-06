@@ -37,8 +37,11 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
   app.get('/api/users', function getUsersCallback( req, res ) {
     logger.info('Inside get /api/users');
 
+
     var response = {};
-    models.User.findAll().then(users => {
+    models.User.findAll({
+      where: { UserTypeId: {[OP.eq]: req.query.usertypeid}}
+    }).then(users => {
       logger.info ( STRINGS.RESULT_SUCCESS );
       res.status( HTTP.OK ).jsonp( users );
     }).catch(function(err) {

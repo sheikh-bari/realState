@@ -186,13 +186,20 @@ $(window).load(function() {
                 };
 
                 if(userInfo){
+                     
                     if(userInfo.UserTypeId == 2){
-                        $('.hide-agent-info').hide();
-                        $('.display-agent-info').hide();                        
+                        $('.display-agent-info').hide();   
+                        $('.mark-as-favourite').hide(); 
+                        $('.login-message').hide();                    
+                    }else{
+                        $('.login-message').hide();
+                        $('.mark-as-favourite').show();   
                     }
                 } else{
-                    $('.hide-agent-info').show();
-                    $('.display-agent-info').hide();                    
+                   
+                    $('.display-agent-info').hide();
+                    $('.login-message').show(); 
+                    $('.mark-as-favourite').hide();                      
                 }
             });
         })
