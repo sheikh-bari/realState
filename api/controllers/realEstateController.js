@@ -323,7 +323,7 @@ var listing = module.exports = {};
         (req.body.Zip !== null && req.body.Zip !== 'undefined' && req.body.Zip !== '') &&
         (req.body.State !== null && req.body.State !== 'undefined' && req.body.State !== '') &&
         (req.body.City !== null && req.body.City !== 'undefined' && req.body.City !== '') &&
-        (req.body.parking !== null && req.body.parking !== 'undefined' && req.body.parking !== '') &&
+        (req.body.Parking !== null && req.body.Parking !== 'undefined' && req.body.Parking !== '') &&
         (req.body.AdTypeName !== null && req.body.AdTypeName !== 'undefined' && req.body.AdTypeName !== '') &&
         (req.body.real_estate_category_id !== null && req.body.real_estate_category_id !== 'undefined' && req.body.real_estate_category_id !== '') &&
         (req.body.Title !== null && req.body.Title !== 'undefined' && req.body.Title !== '')) {
@@ -342,7 +342,7 @@ var listing = module.exports = {};
           State: req.body.State,
           City: req.body.City, 
           AdDescription: req.body.AdDescription, 
-          Parking: req.body.parking, 
+          Parking: req.body.Parking, 
           NumOfFloors: req.body.no_of_floors, 
           LotArea: req.body.lot_area,
           AdStatusId: 1,

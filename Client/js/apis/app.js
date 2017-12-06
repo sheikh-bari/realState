@@ -220,8 +220,6 @@ function saveLisitng(data){
         contentType: false,
         data: formData,//JSON.stringify(_data),
         enctype: 'multipart/form-data',
-        //dataType: "json",
-        //contentType: 'application/json',
         success: function (response) {
             
             deferred.resolve(response);
