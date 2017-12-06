@@ -4,12 +4,54 @@
  * @author Copyright Saud Bin Habib
  */
 
+
+
 const fs = require('fs');
 
 var message = module.exports = {};
 
-message.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bcrypt, config, OP) {
+message.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bcrypt, config, OP , nodemailer) {
 
+
+  /**
+   * @api {post}  /api/referListing  Refer Listing.
+   * @apiName referListing
+   * @apiGroup MessageController
+   *
+   * @apiSuccess (Success) {JSON} new users.
+   */
+  app.post('/api/referListing', function InsertUserCallback( req, res ) {
+    logger.info('Inside post /api/messageController');
+
+    
+    var transporter = nodemailer.createTransport({
+     service: 'gmail',
+     auth: {
+            user: 'omer.aslamteam@gmail.com',
+            pass: 'omerAslam12'
+        }
+    });
+    
+    const mailOptions = {
+      from: 'Group 15 & 19 <omer.aslamteam@gmail.com>', 
+      to: req.body.email,
+      subject: req.body.subject,
+      html: "<p> Mr "+ req.body.name+" refer this property to you <br> This is a perfect house for purchasing. Feel free to contact with the Agent <br> <br></p> <a href='" + req.body.url + "'>"
+    };
+
+    transporter.sendMail(mailOptions, function (err, info) {
+      if(err){
+        console.log(err);
+        logger.info(STRINGS.RESULT_FAILED);
+        response.message = STRINGS.ERROR_MESSAGE;
+        res.status( HTTP.OK ).jsonp( err );
+      }else{ 
+        logger.info ( STRINGS.RESULT_SUCCESS );
+        response.message = STRINGS.RESULT_SUCCESS;
+        res.status( HTTP.OK ).jsonp( info );
+      }    
+    });  
+  });
 
   /**
    * @api {Post}  /api/PostMessage  Send Message.

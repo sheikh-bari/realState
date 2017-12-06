@@ -76,11 +76,13 @@
 			</div>
 			<div class="map-buy-single">
 				<h4>Neighborhood Info</h4>
-				<div class="map-buy-single1">
-					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d37494223.23909492!2d103!3d55!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x453c569a896724fb%3A0x1409fdf86611f613!2sRussia!5e0!3m2!1sen!2sin!4v1415776049771"></iframe>
+				<div id="listing-map" class="map-buy-single1">
+					
 
 				</div>
 			</div>
+
+			<div id="maps-debba"></div>
 
 		</div>
 		
@@ -89,7 +91,11 @@
 				
 				<div style="text-align: center;">
 					<div>
-					<a href="javascript:" style="margin:0px" class="hvr-sweep-to-right more mark-as-favourite">MAKE AS FAVOURITE</a>
+					<a id="mark-favourite" href="javascript:" onclick="markFavourite(true)" style="margin:0px" class="hvr-sweep-to-right more">MARK AS FAVOURITE</a>
+					<div id="unmark-fav">
+						<span id="fav-span">MARKED AS FAVOURITE</span>
+						<a id="unmark-favourite" href="javascript:" onclick="markFavourite(false)" style="margin:0px" class="hvr-sweep-to-right more">REMOVE FAVOURITE</a>	
+					</div>
 				</div><br>
 					<h4>AGENT INFO</h4><br>
 					<div>
@@ -100,6 +106,10 @@
 					<small>(RealEstate Agent)</small>
 				</div><br>
 				<div class="display-agent-info">
+
+					<div class="error">
+					    <span id="error-msg-message" style="color: red;font-size: 12px;"></span>
+					</div>
 
 					<div class="agentInfo-message contact-right">
 						<div>Message me</div><br>
@@ -113,10 +123,13 @@
 					<br>
 					<div class="refer-property contact-right">
 						<h4 style="margin-left:10px">REFER THIS PROPERTY</h4><br>
-						<div class="refer-details"><input type="text" placeholder="Enter Name"></div>
-						<div class="refer-details"><input style="width: 100%" type="text" placeholder="Enter Email"></div>
-						<textarea class="refer-details listing-info-inputs" style="height:80px;" rows="3" cols="35" style="resize: none;" placeholder="Description"></textarea>
-						<a href="javascript:" class="hvr-sweep-to-right more">SEND</a>
+						<div class="error">
+						    <span id="error-msg-refer" style="color: red;font-size: 12px;"></span>
+						</div>
+						<div class="refer-details"><input id="referrer-name" type="text" placeholder="Enter Name"></div>
+						<div class="refer-details"><input id="email" style="width: 100%" type="text" placeholder="Enter Email"></div>
+						<textarea id="description" class="refer-details listing-info-inputs" style="height:80px;" rows="3" cols="35" style="resize: none;" placeholder="Description"></textarea>
+						<a href="javascript:" onclick="referListingToOther()" class="hvr-sweep-to-right more">SEND</a>
 					</div>
 
 				</div>

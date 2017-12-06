@@ -23,6 +23,8 @@ var http = require ( 'http' );
 
 var bcrypt = require ('bcrypt-nodejs');
 
+var nodemailer = require('nodemailer');
+
 var path = require('path');
 
 var app = module.exports = express();
@@ -91,7 +93,7 @@ models.sequelize.sync().then(function() {
 
     // Setup message controller
     var messageController = require( __dirname + '/api/controllers/messageController' );
-    messageController.setup(app, logger, STRINGS, HTTP, models, http, request, bcrypt, config, models.OP );
+    messageController.setup(app, logger, STRINGS, HTTP, models, http, request, bcrypt, config, models.OP , nodemailer);
 
   });
 })
