@@ -37,8 +37,11 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
   app.get('/api/users', function getUsersCallback( req, res ) {
     logger.info('Inside get /api/users');
 
+
     var response = {};
-    models.User.findAll().then(users => {
+    models.User.findAll({
+      where: { UserTypeId: {[OP.eq]: req.query.usertypeid}}
+    }).then(users => {
       logger.info ( STRINGS.RESULT_SUCCESS );
       res.status( HTTP.OK ).jsonp( users );
     }).catch(function(err) {
@@ -70,6 +73,47 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
       res.status( HTTP.OK ).jsonp( err );
     })
   });
+
+  /**
+   * @api {get}  /api/GetAgentListing  Get All Agents Listing.
+   * @apiName GetAgentListing
+   * @apiGroup User
+   *
+   * @apiSuccess (Success) {JSON} new users.
+   */
+  app.get('/api/GetAgentListing', function getUserCallback( req, res ) {
+    logger.info('Inside get /api/user');
+
+    var me = this;
+    console.log(req.query.conversationID);
+    var response = {
+      success: false
+    };
+
+    models.sequelize.query(" SELECT u.UserId, u.UserImagePath , u.UserName, concat(u.FirstName, ' ', u.LastName) as AgentName, u.Email,  u.Address, u.MobileNumber, c.CompanyName,c.id as CompanyID FROM `fa17g19`.`realestatecompanies` as c inner join `fa17g19`.`Users` as u on u.RealEstateCompanyID = c.Id where u.UserTypeId = 2;", 
+    { type: models.sequelize.QueryTypes.SELECT}).then(agent => {    
+      if(agent !== null && agent !== '') {
+        // console.log(agent.ConversationID);
+        logger.info ( STRINGS.RESULT_SUCCESS );
+        response.success = true;
+        response.message = STRINGS.AGENTS_RETEREIVE
+        response.data = agent;
+        res.status( HTTP.OK ).jsonp( response );
+             
+      } else {
+        logger.info ( STRINGS.RESULT_SUCCESS );
+        response.message = STRINGS.AGENTS_RETEREIVE_FAILED;
+        response.data = null;
+        res.status( HTTP.OK ).jsonp( response );
+      }
+    }).catch(function(err) {
+      console.log(err);
+      logger.info(STRINGS.RESULT_FAILED);
+      response.message = STRINGS.ERROR_MESSAGE;
+      response.data = err;
+      res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+    });
+  });  
 
 
   /**

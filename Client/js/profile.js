@@ -10,8 +10,13 @@ $(document).ready(function() {
         window.location.href = BASE_URL;
     }
 
+
     var userType = userInfo.UserTypeId,
     userId = userInfo.UserId;
+
+    if(userType == 1){
+        $('.add-new-listing').css("display", "none");
+    }
 
     function loadAgentListings(){
         getListings('', '', '', '', '', '').then(function(data){
@@ -30,36 +35,40 @@ $(document).ready(function() {
                         template.find(".realEstateCity")[0].innerHTML = response[i].City;
                         template.find(".realEstateState")[0].innerHTML = response[i].State;
 
-
                         template.find(".adImage")[0].innerHTML = "<img id=listing-image-"+i+" class='listing-image view-listing-details' src='" + response[i].AdMedia[0].ImagePath + "' data="+response[i].Id+" alt=''>";// <span class='four listing-price'>$"+response[i].Price+"</span>";
                         var exe = template.find(".adImage")[0];
-
-                        template.find(".actionBtns")[0].innerHTML = "<span id=editListing-"+i+" class='label label-primary edit-listing' data='" +response[i].Id+ "'>Edit</span>&nbsp;&nbsp;<span id=deleteListing-"+i+" class='label label-danger delete-listing' data='" +response[i].Id+ "'>Delete</span>"
-
+                        if(userType == 2){
+                            template.find(".actionBtns")[0].innerHTML = "<span id=editListing-"+i+" class='label label-primary edit-listing' data='" +response[i].Id+ "'>Edit</span>&nbsp;&nbsp;<span id=deleteListing-"+i+" class='label label-danger delete-listing' data='" +response[i].Id+ "'>Delete</span>";
+                        }
+                        
                         // after adding all details appending the template
                         template.appendTo(".appendHere");
                     }
 
-                    var listingDetailsLinks = document.getElementsByClassName("view-listing-details");
-                    var deleteListingLinks = document.getElementsByClassName("delete-listing");
-                    var editListingLinks = document.getElementsByClassName("edit-listing");
+                    if(userType == 2){
 
-                    for(var i=0;i < deleteListingLinks.length;i++) {
-                        deleteListingLinks[i].addEventListener("click", function() {
-                            var element = document.getElementById(this.id);
-                            var idx = element.getAttribute("data");
-                            deleteListing(idx);
-                        });
-                    };
+                        var deleteListingLinks = document.getElementsByClassName("delete-listing");
+                        var editListingLinks = document.getElementsByClassName("edit-listing");
 
-                    for(var i=0;i < editListingLinks.length;i++) {
-                        editListingLinks[i].addEventListener("click", function() {
-                            var element = document.getElementById(this.id);
-                            var idx = element.getAttribute("data");
-                            editListing(idx);
-                        });
-                    };
+                        for(var i=0;i < deleteListingLinks.length;i++) {
+                            deleteListingLinks[i].addEventListener("click", function() {
+                                var element = document.getElementById(this.id);
+                                var idx = element.getAttribute("data");
+                                deleteListing(idx);
+                            });
+                        };
 
+                        for(var i=0;i < editListingLinks.length;i++) {
+                            editListingLinks[i].addEventListener("click", function() {
+                                var element = document.getElementById(this.id);
+                                var idx = element.getAttribute("data");
+                                editListing(idx);
+                            });
+                        };
+
+                    }
+
+                    var listingDetailsLinks = document.getElementsByClassName("view-listing-details");                    
                     for(var i=0;i < listingDetailsLinks.length;i++) {
                         listingDetailsLinks[i].addEventListener("click", function() {
                             var element = document.getElementById(this.id);
@@ -112,9 +121,8 @@ $(document).ready(function() {
                 $('.listing-update-btn').css("display", "none");
                 for(var i=0;i < createListingBtn.length;i++) {
                     createListingBtn[i].addEventListener("click", function() {
-                        var element = document.getElementById(this.id);
-                        var idx = element.getAttribute("data");
-                        createListing(idx);
+                       
+                        createListing();
                     });
                 };
         });
@@ -259,13 +267,20 @@ $(document).ready(function() {
                 };
 
                 if(userInfo){
+                     
                     if(userInfo.UserTypeId == 2){
-                        $('.hide-agent-info').hide();
-                        $('.display-agent-info').hide();                        
+                        $('.display-agent-info').hide();   
+                        $('.mark-as-favourite').hide(); 
+                        $('.login-message').hide();                    
+                    }else{
+                        $('.login-message').hide();
+                        $('.mark-as-favourite').show();   
                     }
                 } else{
-                    $('.hide-agent-info').show();
-                    $('.display-agent-info').hide();                    
+                   
+                    $('.display-agent-info').hide();
+                    $('.login-message').show(); 
+                    $('.mark-as-favourite').hide();                      
                 }
             });
         })
@@ -309,8 +324,8 @@ $(document).ready(function() {
         })
     };
 
-    function createListing(listingId){
-        console.log('listing id in updating =', listingId);
+    function createListing(){
+       
         var data = {};
         data.Titel = $('#listing-title').val();
         data.AdDescription = $('#listing-description').val();
@@ -325,10 +340,11 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+        //data.Images = listingFiles;
 
-        console.log( 'after editing =',data);
+        console.log( 'after creating =',data);
         saveLisitng(data).then(function(data){
-           console.log('response after updating listing=', data);
+           console.log('response after creating listing=', data);
             var response = data;
             if(response.success == false){
                 $("#error-msg").text(response.message);
@@ -344,7 +360,7 @@ $(document).ready(function() {
     function updateListing(listingId){
         console.log('listing id in updating =', listingId);
         var data = {};
-        data.Titel = $('#listing-title').val();
+        data.Title = $('#listing-title').val();
         data.AdDescription = $('#listing-description').val();
         data.BedRooms = $('#listing-noOfBeds').val();
         data.BathRooms = $('#listing-noOfBaths').val();
@@ -357,8 +373,6 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
-
-        console.log( 'after editing =',data);
         saveEditedLisitng(data).then(function(data){
            console.log('response after updating listing=', data);
             var response = data;
@@ -371,11 +385,33 @@ $(document).ready(function() {
             } 
         })
     }
-        
 
 });
 
-    
-    
+var listingFiles = [];
+function checkUploadedFile(){
+        var x = this//document.getElementById("listing-fileUpload");
+        var txt = "";
+        if ('files' in x) {
 
-    
+            console.log(x.files,'=========',x);
+            if (x.files.length == 0) {
+                txt = "Select one or more files.";
+            } else {
+                for (var i = 0; i < x.files.length; i++) {
+                    listingFiles.push(x.files[i]);
+                    txt += "<br><strong>" + (i+1) + ". file</strong><br>";
+                    var file = x.files[i];
+                    if ('name' in file) {
+                        txt += "name: " + file.name + "<br>";
+                    }
+                    if ('size' in file) {
+                        txt += "size: " + file.size + " bytes <br>";
+                    }
+                }
+            }
+        } 
+        document.getElementById("listing-images").innerHTML = txt;
+
+    }
+

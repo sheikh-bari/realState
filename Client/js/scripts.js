@@ -209,9 +209,14 @@ $(window).load(function() {
                 response.data.FavouriteIds = [1,2,3,4,5,6,7]
 
                 if(userInfo){
+                     
                     if(userInfo.UserTypeId == 2){
-                        $('.hide-agent-info').hide();
-                        $('.display-agent-info').hide();                        
+                        $('.display-agent-info').hide();   
+                        $('.mark-as-favourite').hide(); 
+                        $('.login-message').hide();                    
+                    }else{
+                        $('.login-message').hide();
+                        $('.mark-as-favourite').show();   
                     }
                     else{
                         $('.display-agent-info').show(); 
@@ -225,8 +230,9 @@ $(window).load(function() {
                         }
                     }
                 } else{
-                    $('.hide-agent-info').show();
-                    $('.display-agent-info').hide();  
+                   $('.display-agent-info').hide();
+                    $('.login-message').show(); 
+                    $('.mark-as-favourite').hide();                      
                 }
             });
         })
