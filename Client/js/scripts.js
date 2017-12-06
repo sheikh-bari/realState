@@ -76,6 +76,7 @@ $(window).load(function() {
 
         $("#body-content").load("partials/_homeBody.html", function(){
             searchListings('');
+           //loadAgents();
         })
 
         $( "#footer-content" ).load( "partials/_footer.html", function() {
@@ -139,6 +140,21 @@ $(window).load(function() {
 
     };
 
+    function loadAgents(){
+        getAgentsList().then(function(data){
+        console.log(data);
+        //var userInfo = getUserInfo();
+        var response = data;
+        if(response.success){
+            var agentList = response.data;
+            $("#agentCard").loadTemplate('../html/partials/_agentCard.html', agentList, { append: true, elemPerPage: 10 });            
+        }
+        else{
+            $("#error-msg").text(response.message);
+        }
+    });
+    }
+
 
    
     function listingDetails(val){
@@ -185,6 +201,13 @@ $(window).load(function() {
                     carousel[0].appendChild(newCarouselImage);
                 };
 
+                $('#mark-favourite').hide();
+                $('#unmark-fav').hide();
+                $('.hide-agent-info').hide();
+                $('.display-agent-info').hide();
+
+                response.data.FavouriteIds = [1,2,3,4,5,6,7]
+
                 if(userInfo){
                      
                     if(userInfo.UserTypeId == 2){
@@ -195,9 +218,19 @@ $(window).load(function() {
                         $('.login-message').hide();
                         $('.mark-as-favourite').show();   
                     }
+                    else{
+                        $('.display-agent-info').show(); 
+                        if($.inArray( userInfo.UserId , response.data.FavouriteIds) < 0){
+                            $('#mark-favourite').show();
+                            $('#unmark-fav').hide();
+                        }
+                        else{
+                            $('#mark-favourite').hide();
+                            $('#unmark-fav').show();
+                        }
+                    }
                 } else{
-                   
-                    $('.display-agent-info').hide();
+                   $('.display-agent-info').hide();
                     $('.login-message').show(); 
                     $('.mark-as-favourite').hide();                      
                 }
@@ -388,10 +421,17 @@ function loadConversation(el){
 
 function postMessage(){    
     var userInfo = getUserInfo();
+    $("#error-msg-message").text("");
     if(userInfo != null){
         var msgText = $("#text-msg").val();
         var senderId = userInfo.UserId;
         var receiverId = parseInt($("#txt-user-id").val());
+
+        if(msgText == "" || msgText === undefined){
+            $("#error-msg-message").text("Please enter message text");
+            return;
+        }
+
         //return;
         postMessageToUser(senderId, receiverId, msgText).then(function(data){
             console.log(data);
@@ -402,7 +442,7 @@ function postMessage(){
                 $('<div/>').loadTemplate($("#msg-template-sender"), msg, { append: true, elemPerPage: 10 }).appendTo("#msg-thread-container");           
             }
             else{
-                $("#error-msg").text(response.message);
+                $("#error-msg-message").text(response.message);
             }
         });    
     }
@@ -430,4 +470,56 @@ function sendMsgToAgent(){
         });    
     }
     
+}
+
+function markFavourite(markFavourite){
+    var listingId = getParameterValues("listing_id");
+    var userId = getUserInfo().UserId;
+
+    markUnmarkListing(listingId, markFavourite, userId).then(function(data){
+        console.log(data);
+        if(response.success){
+            window.location.reload();
+            showToaster('Listing marked successfully', 'success');
+        }
+        else{
+            $("#error-msg").text(response.message);
+        }
+    });
+}
+
+function referListingToOther(){
+    $("#error-msg-refer").text("");
+
+    var name = $("#referrer-name").val();
+    var toEmail = $("#email").val();
+    var description = $("#description").val();
+    var url = window.location.href;
+
+    if(name == "" || name === undefined){
+        $("#error-msg-refer").text("Please enter Name");
+        return;
+    }
+
+    if(toEmail == "" || toEmail === undefined){
+        $("#error-msg-refer").text("Please enter email");
+        return;
+    }
+
+    referListing(name, toEmail, description, url).then(function(data){
+        console.log(data);
+        if(response.success){
+            $("#referrer-name").val("");
+            $("#email").val("");
+            $("#description").val("");
+            showToaster('Listing referred successfully', 'success');
+        }
+        else{
+            $("#error-msg-refer").text(response.message);
+        }
+    });
+}
+
+function updateProfile(){
+    alert("Not implemented yet");
 }
