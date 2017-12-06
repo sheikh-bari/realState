@@ -12,26 +12,66 @@
 
 			<div class="row">
 				<div class="col-md-4">
-					<input id="listing-noOfBeds" type="text" placeholder="Number of Bedrooms" required="" >
+					<input id="listing-noOfBeds" type="number" placeholder="Bedrooms" required="" >
 				</div>
 				<div class="col-md-4">
-					<input id="listing-noOfBaths" type="text" placeholder="Number of Bathrooms" required="" >
+					<input id="listing-noOfBaths" type="number" placeholder="Bathrooms" required="" >
 				</div>
 				<div class="col-md-4">
-					<input id="listing-kitchen" type="text" placeholder="Kitchen" required="" >
+					<input id="listing-kitchen" type="number" placeholder="Kitchen" required="" >
 				</div>
 				
 			</div>
 
 			<div class="row">
-				<div class="col-md-4">
-					<input id="listing-type" type="text" placeholder="Type of Listing" required="" >
+				<div class="col-md-3">
+					<input id="listing-noOfLiving" type="number" placeholder="Livingrooms" required="" >
 				</div>
-				<div class="col-md-4">
-					<input id="listing-area" type="email" placeholder="Area" required="" >
+
+				<div class="col-md-3">
+					<input id="listing-area" type="number" placeholder="Area" required="" >
 				</div>
-				<div class="col-md-4">
-					<input id="listing-price" type="text" placeholder="Price" required="" >
+
+				<div class="col-md-3">
+					<input id="listing-lotArea" type="number" placeholder="Lot Area" required="" >
+				</div>
+				
+				<div class="col-md-3">
+					
+					<input id="listing-noOfFloors" type="number" placeholder="Floors" required="" >
+				</div>
+				
+			</div>
+
+			<div class="row">
+				<div class="col-md-3">
+					
+					
+					<select id="listing-parking" class="in-drop form-control">
+						<option value="">Parking</option>
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
+					</select>
+				</div>
+				<div class="col-md-3">
+					<select id="listing-type" class="in-drop form-control">
+						<option value="">Ad Type</option>
+						<option value="Buy">Buy</option>
+						<option value="Rental">Rental</option>
+					</select>
+				</div>
+
+				<div class="col-md-3">
+					
+					<select id="listing-category" class="in-drop form-control">
+						<option value="">Category</option>
+						<option value="House">House</option>
+						<option value="Apartment">Apartment</option>
+					</select>
+				</div>
+				
+				<div class="col-md-3">
+					<input id="listing-price" type="number" placeholder="Price" required="" >
 				</div>
 				
 			</div>
@@ -45,7 +85,7 @@
 					<input id="listing-country" type="email" placeholder="Country" required="" >
 				</div>
 				<div class="col-md-4">
-					<input id="listing-zip" type="text" placeholder="Zip" required="" >
+					<input id="listing-zip" type="number" placeholder="Zip" required="" >
 				</div>
 				
 			</div>
