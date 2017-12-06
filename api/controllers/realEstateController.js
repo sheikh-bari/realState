@@ -287,6 +287,72 @@ var listing = module.exports = {};
   });
 
   /**
+   * @api {post}  /api/user/deleteListing  delete listing.
+   * @apiName deleteListing
+   * @apiGroup realEstateController
+   *
+   * @apiSuccess (Success) {JSON} Delete Listing.
+   */
+  app.post('/api/deleteListing', function updateUserCallBack( req, res ) {
+    logger.info('Inside post /api/realEstateController/deleteListing');
+    var response = {
+      success: false
+    };
+
+    if( (req.body.Id !== undefined && req.body.ID != '') ) {
+      models.RealEstateAd.findOne({
+        where: { ID: {[OP.eq]: req.body.Id} }
+      }).then(list => {
+          if( list == null || list.dataValues.ID == req.body.Id ) {
+          models.RealEstateAd.update({
+            AdStatusId: 3
+          },
+          {
+            where: {
+              ID: {[OP.eq]: req.body.Id}
+            }
+          }).then(function(lists) {
+            models.User.findById(req.body.userId).then(function(deletedList){
+              logger.info ( STRINGS.RESULT_SUCCESS );          
+              response.success = true;
+              response.message = STRINGS.RESULT_SUCCESS;
+              response.data = deletedList;
+              res.status( HTTP.OK ).jsonp( response );
+            })
+          }).catch(function(err) {
+            logger.info(STRINGS.RESULT_FAILED);
+            response.success = false;
+            response.data = err;
+            response.message = STRINGS.ERROR_MESSAGE;
+            res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+          });
+        } else {
+          logger.info(STRINGS.RESULT_FAILED);
+          response.success = false;
+          response.data = null;
+          response.message = STRINGS.ERROR_MESSAGE;
+          res.status( HTTP.OK ).jsonp( response );
+        }
+      }).catch(function(err) {
+        logger.info(STRINGS.RESULT_FAILED);
+        console.log(err);
+        response.success = false;
+        response.message = STRINGS.ERROR_MESSAGE;
+        response.data = err
+        res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+      })      
+  } else {
+    logger.info(STRINGS.RESULT_FAILED);
+    response.success = false;
+    response.data = null;
+    response.message = STRINGS.ACCESS_DENIED;
+    res.status( HTTP.BAD_REQUEST ).jsonp( response );
+    }
+  });
+
+
+
+  /**
    * @api {post}  /api/favoriteListing  Adding/Deleting new Listing.
    * @apiName favoriteListing
    * @apiGroup Listing
