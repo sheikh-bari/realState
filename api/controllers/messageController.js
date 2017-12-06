@@ -22,7 +22,9 @@ message.setup = function user(app, logger, STRINGS, HTTP, models, http, request,
    */
   app.post('/api/referListing', function InsertUserCallback( req, res ) {
     logger.info('Inside post /api/messageController');
-
+    var response = {
+      success: false
+    };
     
     var transporter = nodemailer.createTransport({
      service: 'gmail',
@@ -43,12 +45,16 @@ message.setup = function user(app, logger, STRINGS, HTTP, models, http, request,
       if(err){
         console.log(err);
         logger.info(STRINGS.RESULT_FAILED);
+        response.success = false;
         response.message = STRINGS.ERROR_MESSAGE;
-        res.status( HTTP.OK ).jsonp( err );
+        response.data = err;
+        res.status( HTTP.OK ).jsonp( response );
       }else{ 
         logger.info ( STRINGS.RESULT_SUCCESS );
-        response.message = STRINGS.RESULT_SUCCESS;
-        res.status( HTTP.OK ).jsonp( info );
+        response.success = true;
+        response.message = STRINGS.USER_MESSAGE_SEND;
+        response.data = info;
+        res.status( HTTP.OK ).jsonp( response );
       }    
     });  
   });
