@@ -155,8 +155,28 @@ $(window).load(function() {
     });
     }
 
+    // locates the address in google maps and add it to html page
+    function locateInMap(address){
+        var address = address || 'Germany';
+        geocoder = new google.maps.Geocoder();
+        if (geocoder) {
+            geocoder.geocode({
+                'address': address
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                
+                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q="+results[0].geometry.location.lat()+","+results[0].geometry.location.lng()+"&hl=es;z=14&amp;output=embed'></iframe>";
 
-   
+                }else{
+                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
+                }
+            });
+        }else{
+            document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
+
+        }
+    }
+
     function listingDetails(val){
          var userInfo = getUserInfo();
         console.log(val);
@@ -200,6 +220,9 @@ $(window).load(function() {
                     
                     carousel[0].appendChild(newCarouselImage);
                 };
+                var address = response.data.Address +','+ response.data.City +','+ response.data.State+','+ response.data.Zip;
+                locateInMap(address);
+                
 
                 $('#mark-favourite').hide();
                 $('#unmark-fav').hide();
@@ -214,12 +237,10 @@ $(window).load(function() {
                         $('.display-agent-info').hide();   
                         $('.mark-as-favourite').hide(); 
                         $('.login-message').hide();                    
-                    }else{
-                        $('.login-message').hide();
-                        $('.mark-as-favourite').show();   
                     }
                     else{
                         $('.display-agent-info').show(); 
+                        $('.login-message').hide();
                         if($.inArray( userInfo.UserId , response.data.FavouriteIds) < 0){
                             $('#mark-favourite').show();
                             $('#unmark-fav').hide();
@@ -523,3 +544,6 @@ function referListingToOther(){
 function updateProfile(){
     alert("Not implemented yet");
 }
+
+
+

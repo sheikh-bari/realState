@@ -223,6 +223,22 @@ $(document).ready(function() {
         }
     };
 
+    function locateInMap(address){
+        var address = address || 'Ferrol, Galicia, Spain';
+        geocoder = new google.maps.Geocoder();
+        if (geocoder) {
+            geocoder.geocode({
+                'address': address
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                console.log(results);
+                document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q="+results[0].geometry.location.lat()+","+results[0].geometry.location.lng()+"&hl=es;z=14&amp;output=embed'></iframe>";
+
+                }
+            });
+        }
+    }
+
     function listingDetails(val){
          var userInfo = getUserInfo();
         console.log(val);
@@ -266,6 +282,9 @@ $(document).ready(function() {
                     carousel[0].appendChild(newCarouselImage);
                 };
 
+                var address = response.data.Address +','+ response.data.City +','+ response.data.State+','+ response.data.Zip;
+                locateInMap(address);
+                
                 if(userInfo){
                      
                     if(userInfo.UserTypeId == 2){
