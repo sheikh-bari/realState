@@ -294,39 +294,39 @@ var listing = module.exports = {};
     logger.info('Inside post /api/Listing');
 
     var date = new Date();
-
-    console.log(req.body.Status);
-    console.log(req.body.UserID);
-    console.log(req.body.AdID);
+    var response = {
+      
+    };
     var flag = req.body.Status;
-    if(flag){
+    if(flag == true){
       models.FavouriteAds.create({
         RealEstateAdID: req.body.AdID,
         UserUserId: req.body.UserID,
       }).then(function(fav) {
           logger.info ( STRINGS.RESULT_SUCCESS );
           response.success = true;
-          response.message = STRINGS.FAVORITE_ADDED
+          response.message = STRINGS.FAVORITE_ADDED;
           response.data = fav;
-          res.status( HTTP.OK ).jsonp( fav );
+          res.status( HTTP.OK ).jsonp( response );
       }).catch(function(err) {
           logger.info ( err );
+          response.success = false;
           response.message = STRINGS.ERROR_MESSAGE;
           response.data = null;
           res.status( HTTP.OK ).jsonp( err );
       });
     }else{
-      models.sequelize.query(" delete from `fa17g19`.`favouriteads` where `RealEstateAdID = " + AdID + " and `UserUserId` = " + UserID, 
-      { type: models.sequelize.QueryTypes.SELECT}).then(favorite => {    
+      models.sequelize.query(" delete from `fa17g19`.`favouriteads` where `RealEstateAdID` = " + req.body.AdID + " and `UserUserId` = " + req.body.UserID + " ; ", 
+      { type: models.sequelize.QueryTypes.DELETE}).then(favorite => {    
         if(favorite !== null && favorite !== '') {
-          // console.log(message.ConversationID);
           logger.info ( STRINGS.RESULT_SUCCESS );
           response.success = true;
-          response.message = STRINGS.FAVORITE_DELETED
+          response.message = STRINGS.FAVORITE_DELETED;
           response.data = favorite;
-          res.status( HTTP.OK ).jsonp( favorite );         
+          res.status( HTTP.OK ).jsonp( response );        
         } else {
           logger.info ( STRINGS.RESULT_SUCCESS );
+          response.success = false;
           response.message = STRINGS.ERROR_MESSAGE;
           response.data = null;
         }
