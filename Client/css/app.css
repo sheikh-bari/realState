@@ -55,7 +55,8 @@
   font-size: 1.7em;
   margin: 0.5em 0em 0;
 }
-.listing-title, .listing-image{
+<<<<<<< HEAD
+.listing-title, .listing-image, .edit-listing, .delete-listing{
   cursor: pointer;
 }
 
@@ -70,13 +71,17 @@
 
 }
 
+.listing-title, .listing-image{
+  cursor: pointer;
+}
+
 .adImage{
   text-align: center;
 }
 
 .listing-image{
-  width:89%;
-  height: 175px;
+  width:100%;
+  height: 185px;
 }
 .adCardDetails{
   font-size: 11.5px;
@@ -433,6 +438,7 @@
     margin-top: 15px;
     background: white;
     position: absolute;
+    width: 165px;
 }
 
 .new-listing-form{
@@ -575,4 +581,47 @@ div.cell {
 
 .myprofile-content{
   padding-top:20px;
+}
+
+.realestateAd-status{
+  font-size: 11px;
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    text-align: center;
+    padding: 0px;
+}
+    
+
+
+.realEstateAgent{
+  border: 1px solid lightgrey;
+  margin:15px 0px;
+}
+
+.agent-title, .agent-image{
+  cursor: pointer;
+}
+
+.agentImage{
+  text-align: center;
+}
+
+.agent-image{
+  width:89%;
+  height: 175px;
+}
+.agentCardDetails{
+  font-size: 11.5px;
+  
+}
+.agentCardsAttribute{
+  color: grey;
+  padding: 0px 10px 0px 11px !important;
+}
+.agentCardsValue{
+  color: darkgrey;
+  padding: 0px 10px 0px 10px !important;
+}
+.realEstateAgents{
+  display: inline-flex;
 }

@@ -36,4 +36,7 @@ config.dbPath = ( config.app.mode.current == config.app.mode.DEVELOPMENT) ? 'mys
 config.db = {}
 config.db.host = config.dbPath;
 
+config.imageFolderPath = '/../../Client/images/';
+config.imageDbPath = 'images/';
+config.defaultHomeImage = 'home-default.jpg';
 module.exports = config;

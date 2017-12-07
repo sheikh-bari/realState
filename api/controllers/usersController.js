@@ -161,26 +161,83 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
           where: { Email: {[OP.eq]: req.body.email} }
         }).then(user => {
           if( user == null || user.dataValues.UserId == req.body.userId ) {
-            models.User.update({
-              FirstName: req.body.fname,
-              LastName: req.body.lname,
-              Email: req.body.email
-            },
-            {
-              where: {
-                UserId: {[OP.eq]: req.body.userId}
+            var file = req.files.userImage;
+            if( file && file.size > 0 ) {
+              var date = new Date();
+              var timeStamp = Math.floor(date);
+              try {
+                var is = fs.createReadStream(req.files.userImage.path);
+                var os = fs.createWriteStream( __dirname + config.imageFolderPath + timeStamp + req.files.userImage.name);
+
+                is.pipe(os);
+
+                is.on('end', function() {
+                  // remove file
+                  fs.unlinkSync(req.files.userImage.path);
+                  models.User.update({
+                    FirstName: req.body.fname,
+                    LastName: req.body.lname,
+                    Email: req.body.email,
+                    Address: req.body.address,
+                    MobileNumber: req.body.mobile,
+                    UserImagePath: config.imageDbPath +timeStamp + req.files.userImage.name
+                  },
+                  {
+                    where: {
+                      UserId: {[OP.eq]: req.body.userId}
+                    }
+                  }).then(function(updatedUser){
+                    models.User.findById(req.body.userId).then(function(updatedUser){
+                      logger.info ( STRINGS.RESULT_SUCCESS );
+                      response.success = true;
+                      response.message = STRINGS.USER_UPDATE_SUCCESS;
+                      response.data = updatedUser;
+                      res.status( HTTP.OK ).jsonp( response );
+                    })
+                  }).catch(function(err){
+                    logger.info ( STRINGS.IMAGE_UPLOAD_FAILED );
+                    response.success = false;
+                    response.data = err;
+                    response.message = STRINGS.IMAGE_UPLOAD_FAILED;
+                    res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+                  })
+                });
+              } catch ( err ) {
+                logger.info ( STRINGS.IMAGE_UPLOAD_FAILED );
+                response.success = false;
+                response.data = err;
+                response.message = STRINGS.IMAGE_UPLOAD_FAILED;
+                res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
               }
-            }).then(function(users) {
-              models.User.findById(req.body.userId).then(function(updatedUser){
-                logger.info ( STRINGS.RESULT_SUCCESS );
-                res.status( HTTP.OK ).jsonp( updatedUser );
+
+            } else {
+              models.User.update({
+                FirstName: req.body.fname,
+                LastName: req.body.lname,
+                Email: req.body.email,
+                Address: req.body.address,
+                MobileNumber: req.body.mobile
+              },
+              {
+                where: {
+                  UserId: {[OP.eq]: req.body.userId}
+                }
+              }).then(function(users) {
+                models.User.findById(req.body.userId).then(function(updatedUser){
+                  logger.info ( STRINGS.RESULT_SUCCESS );
+                  response.success = true;
+                  response.message = STRINGS.USER_UPDATE_SUCCESS;
+                  response.data = updatedUser;
+                  res.status( HTTP.OK ).jsonp( response );
+                }).catch(function(err){
+                  console.log(err);
+                  logger.info(STRINGS.RESULT_FAILED);
+                  response.data = err;
+                  response.message = STRINGS.ERROR_MESSAGE;
+                  res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+                })
               })
-            }).catch(function(err) {
-              logger.info(STRINGS.RESULT_FAILED);
-              response.data = err;
-              response.message = STRINGS.ERROR_MESSAGE;
-              res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
-            });
+            }
           } else {
             logger.info(STRINGS.RESULT_FAILED);
             response.data = null;

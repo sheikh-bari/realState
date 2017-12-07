@@ -20,11 +20,12 @@ var listing = module.exports = {};
  * @param {file} http http String filepath.
  * @param {file} request request filepath.
  * @param {Object} Sequelize operators
+ * @param {file} config file path
  *
  * @returns {void}
  */
 
- listing.setup = function listing(app, logger, STRINGS, HTTP, models, http, request, OP) {
+ listing.setup = function listing(app, logger, STRINGS, HTTP, models, http, request, OP, config) {
 
   /**
    * @api {get}  /api/listings  List Of All Listings.
@@ -68,8 +69,7 @@ var listing = module.exports = {};
             attributes: ['CategoryName']
           }
         ],
-        offset: pagination,
-        limit: 12,
+        group: ['RealEstateAd.Id','AdMedia.Id']
         
       }).then( listings => {
         response.success = true;
@@ -77,6 +77,7 @@ var listing = module.exports = {};
         response.data = listings;
         res.status( HTTP.OK ).jsonp( response );
       }).catch( function( err ){
+        console.log(err);
         logger.info(STRINGS.RESULT_FAILED);
         response.success = false;
         response.message = STRINGS.GET_LISTINGS_FAILURE;
@@ -184,8 +185,7 @@ var listing = module.exports = {};
         order: [['createdAt','DESC']],
         where: searchTextQuery,
         include: includeQuery,
-        offset: pagination,
-        limit: 12
+        group: ['RealEstateAd.Id','AdMedia.Id']
       }).then(listings =>{
         logger.info( STRINGS.RESULT_SUCCESS );
         response.success = true;
@@ -193,6 +193,7 @@ var listing = module.exports = {};
         response.data = listings;
         res.status( HTTP.OK ).jsonp(response);
       }).catch(function(err){
+        console.log(err);
         logger.info(STRINGS.RESULT_FAILED);
         response.success = false;
         response.message = STRINGS.GET_LISTINGS_FAILURE;
@@ -430,51 +431,144 @@ var listing = module.exports = {};
    * @apiSuccess (Success) {JSON} new listing.
    */
 
-  app.post('/api/listing', function InsertListingCallback(req, res){
-    logger.info('Inside post /api/listing');
+  app.post('/api/listing/create',function(req,res){
+    logger.info('Inside post /api/listing/create');
+    var response = {
+      success: false
+    };
 
     var date = new Date();
-    var response = {};
+    var timeStamp = Math.floor(date);
 
-    models.RealEstateAd.create({
-      AgentId: req.body.AgentId,                              
-      BedRooms: req.body.bedrooms, 
-      BathRooms: req.body.bathrooms, 
-      Kitchen: req.body.kitchen, 
-      LivingRooms: req.body.living_room,
-      SquareFeet: req.body.square_feet, 
-      Price: req.body.price,
-      Address: req.body.address, 
-      Zip: req.body.zip, 
-      State: req.body.state,
-      City: req.body.city, 
-      AdDescription: req.body.description, 
-      Parking: req.body.parking, 
-      NumOfFloors: req.body.no_of_floors, 
-      LotArea: req.body.lot_area,
-      AdStatusId: req.body.ad_status,
-      AdTypeId: req.body.ad_type,
-      RealEstateCategoryId: req.body.real_estate_category_id, 
-      Title: req.body.title,
-      createdAt: date.now,
-      updatedAt: date.now
-    }).then(function( listing ){
+    var fileNames = [];
+    console.log(req.body);
 
-      logger.info ( STRINGS.RESULT_SUCCESS );
-      response.success = true;
-      response.message = STRINGS.AD_CREATED_SUCCESS;
-      response.data = listing;
+    if (req.body.AgentId !== null && req.body.AgentId !== 'undefined' && req.body.AgentId !== '') {
+      if((req.body.BedRooms !== null && req.body.BedRooms !== 'undefined' && req.body.BedRooms !== '') &&
+        (req.body.BathRooms !== null && req.body.BathRooms !== 'undefined' && req.body.BathRooms !== '') &&
+        (req.body.Kitchen !== null && req.body.Kitchen !== 'undefined' && req.body.Kitchen !== '') &&
+        (req.body.SquareFeet !== null && req.body.SquareFeet !== 'undefined' && req.body.SquareFeet !== '') &&
+        (req.body.Price !== null && req.body.Price !== 'undefined' && req.body.Price !== '') &&
+        (req.body.Address !== null && req.body.Address !== 'undefined' && req.body.Address !== '') &&
+        (req.body.Zip !== null && req.body.Zip !== 'undefined' && req.body.Zip !== '') &&
+        (req.body.State !== null && req.body.State !== 'undefined' && req.body.State !== '') &&
+        (req.body.City !== null && req.body.City !== 'undefined' && req.body.City !== '') &&
+        (req.body.Parking !== null && req.body.Parking !== 'undefined' && req.body.Parking !== '') &&
+        (req.body.AdTypeName !== null && req.body.AdTypeName !== 'undefined' && req.body.AdTypeName !== '') &&
+        (req.body.real_estate_category_id !== null && req.body.real_estate_category_id !== 'undefined' && req.body.real_estate_category_id !== '') &&
+        (req.body.Title !== null && req.body.Title !== 'undefined' && req.body.Title !== '')) {
+
+
+        models.RealEstateAd.create({
+          AgentId: req.body.AgentId,                              
+          BedRooms: req.body.BedRooms, 
+          BathRooms: req.body.BathRooms, 
+          Kitchen: req.body.Kitchen, 
+          LivingRooms: req.body.LivingRooms,
+          SquareFeet: req.body.SquareFeet, 
+          Price: req.body.Price,
+          Address: req.body.Address, 
+          Zip: req.body.Zip, 
+          State: req.body.State,
+          City: req.body.City, 
+          AdDescription: req.body.AdDescription, 
+          Parking: req.body.Parking, 
+          NumOfFloors: req.body.NumOfFloors, 
+          LotArea: req.body.LotArea,
+          AdStatusId: 1,
+          AdTypeId: req.body.AdTypeName,
+          RealEstateCategoryId: req.body.RealEstateCategory, 
+          Title: req.body.Title,
+          createdAt: date.now,
+          updatedAt: date.now,
+          Latitude: req.body.Latitude,
+          Longitude: req.body.Longitude
+
+        }).then(function( listing ){
+
+          logger.info ( STRINGS.RESULT_SUCCESS );
+          var k;
+          if(req.body.totalImages > 0) {
+            var k = 0;
+            req.files.uploadedImages.forEach(function (element, index, array) {
+              fs.readFile(element.path, function (err, data) {
+                var newPath = __dirname + config.imageFolderPath + timeStamp + element.name;                
+                fs.writeFile(newPath, data, function (err) {
+                  if(!err) {
+                    fileNames.push(config.imageDbPath +timeStamp + element.name);
+                  }
+                  var dateNow = new Date();
+                  k++;
+                  if(req.body.totalImages == k) {
+                    var imagesData = [];
+                    for(var j = 0; j < fileNames.length; j++) {
+                      var img = {
+                        ImagePath: fileNames[j],
+                        RealEstateAdID: listing.ID,
+                        createdAt: dateNow,
+                        updatedAt: dateNow
+                      }
+                      imagesData.push(img);
+                    }
+                    models.AdMedia.bulkCreate(imagesData).then(function(data){
+                      response.success = true;
+                      response.data = listing;
+                      response.message = STRINGS.AD_CREATED_SUCCESS;
+                      res.status( HTTP.OK ).jsonp( response );
+                      return;
+                    }).catch(function(err){
+                      console.log(err);
+                      logger.info(STRINGS.FILE_UPLOADING_FAIL);
+                      response.success = false;
+                      response.message = STRINGS.FILE_UPLOADING_FAIL;
+                      res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( err );
+                    });
+                  }
+                });
+              });              
+            });
+          } else {
+            var dateNow = new Date();
+            models.AdMedia.create({
+              ImagePath: config.imageDbPath + config.defaultHomeImage,
+              RealEstateAdID: listing.ID,
+              createdAt: dateNow,
+              updatedAt: dateNow
+            }).then(function(data){
+              response.success = true;
+              response.data = listing;
+              response.message = STRINGS.AD_CREATED_SUCCESS;
+              res.status( HTTP.OK ).jsonp( response );
+            }).catch(function(err){
+              console.log(err);
+              logger.info(STRINGS.FILE_UPLOADING_FAIL);
+              response.success = false;
+              response.message = STRINGS.FILE_UPLOADING_FAIL;
+              res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( err );
+            });
+          }
+         
+        }).catch(function( err ) {
+
+          console.log(err);
+          logger.info(STRINGS.RESULT_FAILED);
+          response.success = false;
+          response.message = STRINGS.AD_CREATED_FAIL;
+          res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( err );
+        });
+      } else {
+        logger.info(STRINGS.INCOMPLETE_DATA);
+        response.message = STRINGS.INCOMPLETE_DATA;
+        response.data = null;
+        res.status( HTTP.BAD_REQUEST ).jsonp( response )
+      }
+    } else {
+      logger.info(STRINGS.ACCESS_DENIED);
+      response.message = STRINGS.ACCESS_DENIED;
+      response.data = null;
       res.status( HTTP.OK ).jsonp( response );
-
-    }).catch(function( err ) {
-
-      logger.info(STRINGS.RESULT_FAILED);
-      response.success = false;
-      response.message = STRINGS.AD_CREATED_FAIL;
-      res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( err );
-    });
-
-   });
+    }
+  });
 
 
   /**
@@ -493,10 +587,11 @@ var listing = module.exports = {};
     var response = {};
 
     models.RealEstateAd.update({
-     AgentId: req.body.AgentId,                              
+     Title: req.body.Title,                              
      BedRooms: req.body.BedRooms, 
      BathRooms: req.body.BathRooms, 
-     Kitchen: req.body.Kitchen, 
+     Kitchen: req.body.Kitchen,
+     AdType: req.body.AdTypeName, 
      LivingRooms: req.body.LivingRooms,
      SquareFeet: req.body.SquareFeet, 
      Price: req.body.Price,
@@ -509,18 +604,29 @@ var listing = module.exports = {};
      NumOfFloors: req.body.NumOfFloors, 
      LotArea: req.body.LotArea, 
      createdAt: date.now,
-     updatedAt: date.now
+     updatedAt: date.now,
+    Latitude: req.body.Latitude,
+    Longitude: req.body.Longitude
+    
     }, {
       where: {
-        ID: {[OP.eq]: req.body.ID}
+        $and: [{ID: {[OP.eq]: req.body.ID}}, {AgentId: {[OP.eq]: req.body.AgentId}}]
       }
     }).then(function( listing ){
-      logger.info ( STRINGS.RESULT_SUCCESS );
-      response.success = true;
-      response.message = STRINGS.AD_UPDATED_SUCCESS;
-      response.data = listing;
-    res.status( HTTP.OK ).jsonp( response );
+      if(listing == 0) {
+        logger.info ( STRINGS.ACCESS_DENIED );
+        response.message = STRINGS.ACCESS_DENIED;
+        response.data = listing;
+        res.status( HTTP.OK ).jsonp( response );
+      } else {
+        logger.info ( STRINGS.RESULT_SUCCESS );
+        response.success = true;
+        response.message = STRINGS.AD_UPDATED_SUCCESS;
+        response.data = listing;
+        res.status( HTTP.OK ).jsonp( response );
+      }
     }).catch(function( err ) {
+      console.log(err);
       logger.info(STRINGS.RESULT_FAILED);
       response.success = false;
       response.message = STRINGS.AD_CREATED_FAIL;

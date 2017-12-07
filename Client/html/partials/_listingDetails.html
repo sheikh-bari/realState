@@ -13,6 +13,9 @@
       interval: 2500
     })
 </script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMMYyP8aymiwqJV4Icbz45WRcOWhqktU4&callback=initMap">
+    </script>
 <div class="container">
 	
 	<div class="buy-single-single">
@@ -61,9 +64,19 @@
 					<!-- <div class="   right-side">
 						<a href="contact.html" class="hvr-sweep-to-right more" >Contact Builder</a>     
 					</div> -->
+					<input type="hidden" id="lat" name="lat">
+					<input type="hidden" id="long" name="long">
 				</div>
 				<div class="col-sm-7 buy-sin">
-					<h4>Description</h4>
+					<div class="row">
+						<div class="col-sm-9">
+							<h4>Description</h4>
+						</div>
+						
+						 <div class="col-sm-3 realestateAd-status"></div>
+						
+					</div>
+					
 					<p id="listing-description"> </p><br><br>
 					<h4>Address</h4>
 					<p><span id="listing-address-street"></span><br>
@@ -75,9 +88,11 @@
 				<div class="clearfix"> </div>
 			</div>
 			<div class="map-buy-single">
-				<h4>Neighborhood Info</h4>
+
+				<h4>Location Map</h4>
 				<div class="map-buy-single1">
-					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d37494223.23909492!2d103!3d55!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x453c569a896724fb%3A0x1409fdf86611f613!2sRussia!5e0!3m2!1sen!2sin!4v1415776049771"></iframe>
+					<!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d37494223.23909492!2d103!3d55!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x453c569a896724fb%3A0x1409fdf86611f613!2sRussia!5e0!3m2!1sen!2sin!4v1415776049771"></iframe> -->
+					<div id="map" style="width: 790px; height: 350px;"></div>
 
 				</div>
 			</div>
@@ -89,10 +104,10 @@
 				
 				<div style="text-align: center;">
 					<div>
-					<a id="mark-favourite" href="javascript:" onclick="markFavourite(true)" style="margin:0px" class="hvr-sweep-to-right more">MARK AS FAVOURITE</a>
+					<a id="mark-favourite" href="javascript:" onclick="markFavourite(1)" style="margin:0px" class="hvr-sweep-to-right more">MARK AS FAVOURITE</a>
 					<div id="unmark-fav">
 						<span id="fav-span">MARKED AS FAVOURITE</span>
-						<a id="unmark-favourite" href="javascript:" onclick="markFavourite(false)" style="margin:0px" class="hvr-sweep-to-right more">REMOVE FAVOURITE</a>	
+						<a id="unmark-favourite" href="javascript:" onclick="markFavourite(0)" style="margin:0px" class="hvr-sweep-to-right more">REMOVE FAVOURITE</a>	
 					</div>
 				</div><br>
 					<h4>AGENT INFO</h4><br>

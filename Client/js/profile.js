@@ -1,25 +1,27 @@
 $(document).ready(function() {
 
     var userInfo = getUserInfo();
-
+    var userType = '', userId = '';
     if(userInfo){
+        userType = userInfo.UserTypeId;
+        userId = userInfo.UserId;
         loadAgentListings();
         document.getElementById('profile-name').innerHTML = userInfo.FirstName+" "+userInfo.LastName;
+        document.getElementById('profile-picture').setAttribute("src", userInfo.UserImagePath);
     }
     else if(userInfo == undefined){
         window.location.href = BASE_URL;
     }
 
 
-    var userType = userInfo.UserTypeId,
-    userId = userInfo.UserId;
+    
 
     if(userType == 1){
         $('.add-new-listing').css("display", "none");
     }
 
     function loadAgentListings(){
-        getListings('', '', '', '', '', '').then(function(data){
+        getUserListings(userId, userType).then(function(data){
             $('.myprofile-content').load("partials/_listingCard.html", function(){
                 if(data.success){
                     var response = data.data;
@@ -29,8 +31,8 @@ $(document).ready(function() {
                         template.attr('style',"display:block;");
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
+                        template.find(".realestateAd-status")[0].innerHTML = "Available";
                         template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
-
 
                         template.find(".realEstateCity")[0].innerHTML = response[i].City;
                         template.find(".realEstateState")[0].innerHTML = response[i].State;
@@ -65,7 +67,6 @@ $(document).ready(function() {
                                 editListing(idx);
                             });
                         };
-
                     }
 
                     var listingDetailsLinks = document.getElementsByClassName("view-listing-details");                    
@@ -81,13 +82,16 @@ $(document).ready(function() {
 
             });
         });
-    }
+    }   
 
+
+    // Displaying and getting list
     $('.myprofile-listings').click(function(){
 
         loadAgentListings();
     })
 
+    //Showing changing password form in view
     $('.myprofile-change-password').click(function(){
        
         $( ".myprofile-content" ).load( "partials/_changePassword.html", function() {
@@ -97,6 +101,7 @@ $(document).ready(function() {
         });
     })
 
+    //Shwoing editing profile form in view
     $('.myprofile-edit').click(function(){
        
         $( ".myprofile-content" ).load( "partials/_editProfile.html", function() {
@@ -107,6 +112,7 @@ $(document).ready(function() {
             $("#lastname").val(userInfo.LastName);
             $("#email").val(userInfo.Email);
             $("#mobilenumber").val(userInfo.MobileNumber);
+            $("#address").val(userInfo.Address);
 
             $('.edit-profile-btn').click(function(){
                 updateProfile();
@@ -114,20 +120,40 @@ $(document).ready(function() {
         });
     })
 
+    // Showing add new listing form in view
     $('.add-new-listing').click(function(){
        
         $( ".myprofile-content" ).load( "partials/_addNewListing.html", function() {
             var createListingBtn = document.getElementsByClassName("listing-new-btn");
-                $('.listing-update-btn').css("display", "none");
-                for(var i=0;i < createListingBtn.length;i++) {
-                    createListingBtn[i].addEventListener("click", function() {
-                       
-                        createListing();
-                    });
-                };
+            $('.ad-status').css("display", "none");
+            $('#listing-map').locationpicker({
+                location: {
+                    latitude: 50.5558095,
+                    longitude: 9.680844900000011
+                },
+                radius: 250,
+                inputBinding: {
+                    latitudeInput: $('#listing-latitude'),
+                    longitudeInput: $('#listing-longitude'),
+                    locationNameInput: $('#us3-address')
+                },
+                enableAutocomplete: true,
+                onchanged: function (currentLocation, isMarkerDropped) {
+                }
+            });
+
+             // Adding click event for button
+            $('.listing-update-btn').css("display", "none");
+            for(var i=0;i < createListingBtn.length;i++) {
+                createListingBtn[i].addEventListener("click", function() {
+                   
+                    createListing();
+                });
+            };
         });
     })    
     
+    // Saving password after updating
     function updatePassword(){
 
         var oldPass = $("#current-password").val(),
@@ -165,12 +191,14 @@ $(document).ready(function() {
         });
     }
 
+    // Saving profile details after updating
     function updateProfile(){
 
         var fname = $("#firstname").val(),
         lname = $("#lastname").val(),
         email = $("#email").val(),
-        mnumber = $("#mobilenumber").val();
+        mnumber = $("#mobilenumber").val(),
+        address = $("#address").val();
 
         if(fname == "" || fname === undefined){
             $("#error-msg").text("Please enter first name");
@@ -184,19 +212,21 @@ $(document).ready(function() {
             $("#error-msg").text("Please confirm email ");
             return;
         }
-        if(mnumber != mnumber){
+        if(mnumber == "" || mnumber === undefined){
             $("#error-msg").text("Please enter mobile number");
             return;
         }
 
-        updateUserDetails(fname, lname, email, mnumber, userType, userId).then(function(data){
+
+        updateUserDetails(fname, lname, email, mnumber, address, userId).then(function(data){
             console.log('response after updating profile=', data);
             var response = data;
             if(response.success == false){
                 $("#error-msg").text(response.message);
             }
             else if(response.success){
-                localStorage.setItem('userInfo', JSON.stringify(response));
+                localStorage.setItem('userInfo', JSON.stringify(response.data));
+                document.getElementById('profile-picture').setAttribute("src", response.data.UserImagePath);;
                 showToaster('Profile updated successfully', 'success');
                 loadAgentListings();
             }
@@ -204,6 +234,7 @@ $(document).ready(function() {
         });
     }
 
+    // Deleting listing
     function deleteListing(id){
         console.log(id);
         var deleteConfirm = confirm("Are you sure Do you want to delete ?");
@@ -223,8 +254,32 @@ $(document).ready(function() {
         }
     };
 
+    // locates the address in google maps and add it to html page
+    function locateInMap(address){
+        var address = address || 'Germany';
+        geocoder = new google.maps.Geocoder();
+        if (geocoder) {
+            geocoder.geocode({
+                'address': address
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                
+                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q="+results[0].geometry.location.lat()+","+results[0].geometry.location.lng()+"&hl=es;z=14&amp;output=embed'></iframe>";
+
+                }else{
+                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
+                }
+            });
+        }else{
+            document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
+
+        }
+    }
+
+
+
     function listingDetails(val){
-         var userInfo = getUserInfo();
+        var userInfo = getUserInfo();
         console.log(val);
         getListingDetails(val).then(function(response){
             console.log(response);
@@ -235,8 +290,7 @@ $(document).ready(function() {
                 
                 document.getElementsByClassName('listing-details-banner')[0].style.display = 'none';
                 $("#listing-heading").html(response.data.Title);
-
-                //document.getElementById('listing-heading').innerHTML = response.data.Title;
+                $(".realestateAd-status").html('Available');
                 $('#listing-description').html(response.data.AdDescription);
                 $('#listing-beds').html(response.data.BedRooms);
                 $('#listing-baths').html(response.data.BathRooms);
@@ -252,41 +306,67 @@ $(document).ready(function() {
                 document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
                 $('#agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
-                document.getElementById('agent-picture').setAttribute("src", "images/te.jpg");
+                document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
+                document.getElementById('lat').value = response.data.Latitude;
+                document.getElementById('long').value = response.data.Longitude;
                 
+                $('#mark-favourite').hide();
+                $('#unmark-fav').hide();
+                $('.hide-agent-info').hide();
+                $('.display-agent-info').hide();
+
+                response.data.FavouriteIds = [];
+                response.data.FavouriteAds.forEach(function(ad){
+                    response.data.FavouriteIds.push(ad.UserUserId)
+                });
+
                 // document.getElementById('listing-images').
                 var carousel = document.getElementsByClassName('listing-carousel-images');
                 console.log(carousel[0]);
-                    for(var i=1; i< response.data.AdMedia.length; i++){
+                for(var i=1; i< response.data.AdMedia.length; i++){
                     var newCarouselImage = document.createElement('div');
                     newCarouselImage.setAttribute("class", "item");
                     newCarouselImage.innerHTML = "<img src="+response.data.AdMedia[i].ImagePath+" alt='' style='width:100%;'>";
                     console.log(newCarouselImage);
                     
                     carousel[0].appendChild(newCarouselImage);
+
+                    var address = response.data.Address +','+ response.data.City +','+ response.data.State+','+ response.data.Zip;
+                    locateInMap(address);
                 };
 
                 if(userInfo){
-                     
                     if(userInfo.UserTypeId == 2){
                         $('.display-agent-info').hide();   
                         $('.mark-as-favourite').hide(); 
                         $('.login-message').hide();                    
-                    }else{
+                    }
+                    else{
+                        $('.display-agent-info').show(); 
                         $('.login-message').hide();
-                        $('.mark-as-favourite').show();   
+                        if($.inArray( userInfo.UserId , response.data.FavouriteIds) < 0){
+                            $('#mark-favourite').show();
+                            $('#unmark-fav').hide();
+                        }
+                        else{
+                            $('#mark-favourite').hide();
+                            $('#unmark-fav').show();
+                        }
                     }
                 } else{
-                   
-                    $('.display-agent-info').hide();
+                   $('.display-agent-info').hide();
                     $('.login-message').show(); 
                     $('.mark-as-favourite').hide();                      
                 }
+
+                //loading map
+                initMap();
             });
         })
 
     };
 
+    // Getting listing details for editing
     function editListing(id){
         console.log(id);
        
@@ -299,8 +379,15 @@ $(document).ready(function() {
                 $('#listing-noOfBeds').val(response.data.BedRooms);
                 $('#listing-noOfBaths').val(response.data.BathRooms);
                 $('#listing-kitchen').val(response.data.Kitchen);
-                $('#listing-type').val(response.data.AdType.AdTypeName);
+                $('#listing-noOfLiving').val(response.data.LivingRooms);
                 $('#listing-area').val(response.data.SquareFeet);
+                $('#listing-lotArea').val(response.data.LotArea);
+                $('#listing-type').val(response.data.AdTypeId);
+                $('#listing-category').val(response.data.RealEstateCategoryId);
+                $('#listing-noOfFloors').val(response.data.NumOfFloors);
+                //$('#listing-parking').val(response.data.Parking);
+                var parking = response.data.Parking+''
+                document.getElementById('listing-parking').value = response.data.Parking;
                 $('#listing-price').val(response.data.Price);
                 $('#listing-door').val(response.data.Address);
                 $('#listing-city').val(response.data.City);
@@ -319,27 +406,55 @@ $(document).ready(function() {
                         updateListing(idx);
                     });
                 };
+
+                $('#listing-map').locationpicker({
+                    location: {
+                        latitude: response.data.Latitude || 50.5558095,
+                        longitude: response.data.longitude || 9.680844900000011
+                    },
+                    radius: 250,
+                    inputBinding: {
+                        latitudeInput: $('#listing-latitude'),
+                        longitudeInput: $('#listing-longitude'),
+                        locationNameInput: $('#us3-address')
+                    },
+                    enableAutocomplete: true,
+                    onchanged: function (currentLocation, isMarkerDropped) {
+                    }
+                });
             });
           
         })
     };
 
+    // Create new listing
     function createListing(){
        
         var data = {};
-        data.Titel = $('#listing-title').val();
+        data.Title = $('#listing-title').val();
         data.AdDescription = $('#listing-description').val();
         data.BedRooms = $('#listing-noOfBeds').val();
         data.BathRooms = $('#listing-noOfBaths').val();
         data.Kitchen = $('#listing-kitchen').val();
-        data.AdTypeName = $('#listing-type').val();
+        data.LivingRooms = $('#listing-noOfLiving').val();
         data.SquareFeet = $('#listing-area').val();
+        data.LotArea = $('#listing-lotArea').val();
+        data.NumOfFloors = $('#listing-noOfFloors').val();
+        data.Parking = $('#listing-parking').val();
+        data.AdTypeName = $('#listing-type').val();
+        data.RealEstateCategory = $('#listing-category').val();
         data.Price = $('#listing-price').val();
         data.Address = $('#listing-door').val();
         data.City = $('#listing-city').val();
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+
+        data.Latitude = $('#listing-latitude').val();
+        data.Longitude = $('#listing-longitude').val();
+
+        data.AgentId = userInfo.UserId;
+
         //data.Images = listingFiles;
 
         console.log( 'after creating =',data);
@@ -356,7 +471,7 @@ $(document).ready(function() {
         })
     }
         
-
+// Save listing after editing 
     function updateListing(listingId){
         console.log('listing id in updating =', listingId);
         var data = {};
@@ -365,14 +480,25 @@ $(document).ready(function() {
         data.BedRooms = $('#listing-noOfBeds').val();
         data.BathRooms = $('#listing-noOfBaths').val();
         data.Kitchen = $('#listing-kitchen').val();
+        data.LivingRooms = $('#listing-noOfLiving').val();
         data.AdTypeName = $('#listing-type').val();
         data.SquareFeet = $('#listing-area').val();
+        data.LotArea = $('#listing-lotArea').val();
+        data.NumOfFloors = $('#listing-noOfFloors').val();
+        data.Parking = $('#listing-noOfFloors').val();
+        data.AdTypeName = $('#listing-type').val();
+        data.RealEstateCategory = $('#listing-category').val();
         data.Price = $('#listing-price').val();
         data.Address = $('#listing-door').val();
         data.City = $('#listing-city').val();
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+        data.AdStatus = $('#listing-status').val();
+        data.Latitude = $('#listing-latitude').val();
+        data.Longitude = $('#listing-longitude').val();
+        data.AgentId = userInfo.UserId;
+        data.ID = listingId;
         saveEditedLisitng(data).then(function(data){
            console.log('response after updating listing=', data);
             var response = data;
@@ -414,4 +540,37 @@ function checkUploadedFile(){
         document.getElementById("listing-images").innerHTML = txt;
 
     }
+
+var map, infoWindow;
+function initMap() {
+    var latitude = $("#lat").val();
+    var longitude = $("#long").val();
+    if(latitude != "" || latitude !== undefined)
+        latitude = parseFloat(latitude);
+    if(longitude != "" || longitude !== undefined)
+        longitude = parseFloat(longitude);
+
+    var location = $("#listing-address-street").text();
+
+    var myLatLng = {lat: latitude, lng: longitude};
+
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 16,
+      center: myLatLng
+    });
+
+    var marker = new google.maps.Marker({
+      position: myLatLng,
+      map: map,
+      title: location
+    });
+
+    marker.info = new google.maps.InfoWindow({
+      content: '<b>Location:</b> ' + location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      marker.info.open(map, marker);
+    });
+}
 
