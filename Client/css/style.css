@@ -1080,10 +1080,10 @@ ul.kid-menu li.menu-kid-left{
   	margin: 0 0 0.5em;
 }
 select.in-drop {
- 	border: 1px solid #D7D7D7;
+ 	/*border: 1px solid #D7D7D7;*/
   	padding: 0.4em 0.5em;
  	width: 100%;
-  	color: #a3a3a3;
+  	/*color: #a3a3a3;*/
   	font-size: 0.9em;
   	outline:none;
 }
@@ -2493,10 +2493,10 @@ font-family: 'Montserrat-Regular';
   padding: 0.8em 1em;
   font-size: 0.85em;
   margin:0 0 0.8em;
-  border: 1px solid #eee;
-  color: #a3a3a3;
-  background: none;
-  outline: none;
+  /*border: 1px solid #eee;*/
+  /*color: #a3a3a3;*/
+  /*background: none;
+  */outline: none;
   width: 100%;
   -webkit-appearance: none;
 }
@@ -2699,17 +2699,17 @@ p.privacy-para {
 	  margin: 2% auto 0;
 }
 .form-info input[type="text"], input[type="email"], input[type="number"],.form-info input[type="password"]{
-	outline: none;
+	/*outline: none;
   	background: none;
-  	color: #a3a3a3;
+  	color: #a3a3a3;*/
   	width: 100%;
   	padding: 10px 10px;
-  	border: none;
+  	/*border: none;*/
   	font-size: 0.9em;
-  	border: 1px solid #eee;
+  	/*border: 1px solid #eee;*/
   	margin: 0 0 1em;
 }
-.form-info  input[type="submit"] {
+.form-info  input[type="submit"], input[type="file"] {
 	outline: none;
   	width: 100%;
   	padding: 0.5em 1em;

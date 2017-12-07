@@ -115,6 +115,26 @@ function getListings(searchVal, accomodationType, bedrooms, sqft, adType, pageIn
     return deferred.promise();
 };
 
+function getUserListings(id, type){
+    var _data = { userId : id, userType : type};
+
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT + 'api/listings/user',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+}
+
 function getListingDetails(id){
     console.log('details api called');
 
@@ -205,7 +225,6 @@ function deleteAdListing(listingId){
 function saveLisitng(data){
     console.log('data before api call',data);
     var formData = new FormData();
-    
     var i = 0;
     for(i ; i < $('input[type=file]')[0].files.length; i++){
         formData.append("uploadedImages[]", $('input[type=file]')[0].files[i]);
@@ -224,7 +243,6 @@ function saveLisitng(data){
         contentType: false,
         data: formData,//JSON.stringify(_data),
         enctype: 'multipart/form-data',
-
         success: function (response) {
             
             deferred.resolve(response);

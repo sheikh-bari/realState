@@ -463,14 +463,17 @@ var listing = module.exports = {};
           City: req.body.City, 
           AdDescription: req.body.AdDescription, 
           Parking: req.body.Parking, 
-          NumOfFloors: req.body.no_of_floors, 
-          LotArea: req.body.lot_area,
+          NumOfFloors: req.body.NumOfFloors, 
+          LotArea: req.body.LotArea,
           AdStatusId: 1,
           AdTypeId: req.body.AdTypeName,
           RealEstateCategoryId: req.body.RealEstateCategory, 
           Title: req.body.Title,
           createdAt: date.now,
           updatedAt: date.now,
+          Latitude: req.body.Latitude,
+          Longitude: req.body.Longitude
+
         }).then(function( listing ){
 
           logger.info ( STRINGS.RESULT_SUCCESS );
