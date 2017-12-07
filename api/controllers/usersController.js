@@ -154,28 +154,66 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
     var response = {
       success: false
     };
-
+    console.log(req.body);
     if( (req.body.userId !== undefined && req.body.userId != '') ) {
       if(req.body.email != undefined && req.body.email != '') {
         models.User.findOne({
           where: { Email: {[OP.eq]: req.body.email} }
         }).then(user => {
+          console.log(user);
           if( user == null || user.dataValues.UserId == req.body.userId ) {
             models.User.update({
               FirstName: req.body.fname,
               LastName: req.body.lname,
-              Email: req.body.email
+              Email: req.body.email,
+              Address: req.body.address,
+              MobileNumber: req.body.mobile
             },
             {
               where: {
                 UserId: {[OP.eq]: req.body.userId}
               }
             }).then(function(users) {
-              models.User.findById(req.body.userId).then(function(updatedUser){
-                logger.info ( STRINGS.RESULT_SUCCESS );
-                res.status( HTTP.OK ).jsonp( updatedUser );
-              })
+              var file = req.files.userImage;
+              if( file && file.size > 0 ) {
+                var date = new Date();
+                var timeStamp = Math.floor(date);
+                try {
+                  var is = fs.createReadStream(req.files.userImage.path);
+                  var os = fs.createWriteStream(config.imageDbPath + timeStamp + req.files.userImage.name);
+
+                  is.pipe(os);
+
+                  is.on('end', function() {
+                    // remove file
+                    fs.unlinkSync(req.files.userImage.path);
+                    models.User.findById(req.body.userId).then(function(updatedUser){
+                      logger.info ( STRINGS.RESULT_SUCCESS );
+                      response.success = true;
+                      response.message = STRING.USER_UPDATE_SUCCESS;
+                      response.data = updatedUser;
+                      res.status( HTTP.OK ).jsonp( response );
+                    })
+                  });
+                } catch ( err ) {
+                  logger.info ( STRINGS.IMAGE_UPLOAD_FAILED );
+                  response.success = false;
+                  response.data = err;
+                  response.message = STRINGS.IMAGE_UPLOAD_FAILED;
+                  res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+                }
+
+              } else {
+                models.User.findById(req.body.userId).then(function(updatedUser){
+                  logger.info ( STRINGS.RESULT_SUCCESS );
+                  response.success = true;
+                  response.message = STRING.USER_UPDATE_SUCCESS;
+                  response.data = updatedUser;
+                  res.status( HTTP.OK ).jsonp( response );
+                })
+              }
             }).catch(function(err) {
+              console.log(err);
               logger.info(STRINGS.RESULT_FAILED);
               response.data = err;
               response.message = STRINGS.ERROR_MESSAGE;

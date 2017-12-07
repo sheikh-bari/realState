@@ -223,6 +223,29 @@ $(document).ready(function() {
         }
     };
 
+    // locates the address in google maps and add it to html page
+    function locateInMap(address){
+        var address = address || 'Germany';
+        geocoder = new google.maps.Geocoder();
+        if (geocoder) {
+            geocoder.geocode({
+                'address': address
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                
+                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q="+results[0].geometry.location.lat()+","+results[0].geometry.location.lng()+"&hl=es;z=14&amp;output=embed'></iframe>";
+
+                }else{
+                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
+                }
+            });
+        }else{
+            document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
+
+        }
+    }
+
+
     function listingDetails(val){
          var userInfo = getUserInfo();
         console.log(val);
@@ -264,6 +287,9 @@ $(document).ready(function() {
                     console.log(newCarouselImage);
                     
                     carousel[0].appendChild(newCarouselImage);
+
+                    var address = response.data.Address +','+ response.data.City +','+ response.data.State+','+ response.data.Zip;
+                    locateInMap(address);
                 };
 
                 if(userInfo){
@@ -299,8 +325,12 @@ $(document).ready(function() {
                 $('#listing-noOfBeds').val(response.data.BedRooms);
                 $('#listing-noOfBaths').val(response.data.BathRooms);
                 $('#listing-kitchen').val(response.data.Kitchen);
-                $('#listing-type').val(response.data.AdType.AdTypeName);
+                $('#listing-noOfLiving').val(response.data.AdType.LivingRooms);
                 $('#listing-area').val(response.data.SquareFeet);
+                $('#listing-lotArea').val(response.data.LotArea);
+                $('#listing-type').val(response.data.AdType.AdTypeName);
+                $('#listing-noOfFloors').val(response.data.NumOfFloors);
+                $('#listing-parking').val(response.data.Parking);
                 $('#listing-price').val(response.data.Price);
                 $('#listing-door').val(response.data.Address);
                 $('#listing-city').val(response.data.City);
@@ -327,19 +357,25 @@ $(document).ready(function() {
     function createListing(){
        
         var data = {};
-        data.Titel = $('#listing-title').val();
+        data.Title = $('#listing-title').val();
         data.AdDescription = $('#listing-description').val();
         data.BedRooms = $('#listing-noOfBeds').val();
         data.BathRooms = $('#listing-noOfBaths').val();
         data.Kitchen = $('#listing-kitchen').val();
-        data.AdTypeName = $('#listing-type').val();
+        data.LivingRooms = $('#listing-noOfLiving').val();
         data.SquareFeet = $('#listing-area').val();
+        data.LotArea = $('#listing-lotArea').val();
+        data.NumOfFloors = $('#listing-noOfFloors').val();
+        data.Parking = $('#listing-parking').val();
+        data.AdTypeName = $('#listing-type').val();
+        data.RealEstateCategory = $('#listing-category').val();
         data.Price = $('#listing-price').val();
         data.Address = $('#listing-door').val();
         data.City = $('#listing-city').val();
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+        data.AgentId = userInfo.UserId;
         //data.Images = listingFiles;
 
         console.log( 'after creating =',data);
@@ -365,8 +401,14 @@ $(document).ready(function() {
         data.BedRooms = $('#listing-noOfBeds').val();
         data.BathRooms = $('#listing-noOfBaths').val();
         data.Kitchen = $('#listing-kitchen').val();
+        data.LivingRooms = $('#listing-noOfLiving').val();
         data.AdTypeName = $('#listing-type').val();
         data.SquareFeet = $('#listing-area').val();
+        data.LotArea = $('#listing-lotArea').val();
+        data.NumOfFloors = $('#listing-noOfFloors').val();
+        data.Parking = $('#listing-noOfFloors').val();
+        data.AdTypeName = $('#listing-type').val();
+        data.RealEstateCategory = $('#listing-category').val();
         data.Price = $('#listing-price').val();
         data.Address = $('#listing-door').val();
         data.City = $('#listing-city').val();

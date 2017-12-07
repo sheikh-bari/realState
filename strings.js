@@ -29,6 +29,10 @@ module.exports = Object.freeze({
   PASSWORD_EMPTY: 'Please Enter new and old passwords',
   PASSWORD_CHANGE_SUCCESS: 'Password Change Succesfully',
   USER_TYPE_AND_ID_MISSING: 'User type or User Id missing',
-  USER_NAME_EMAIL_EXIST: 'Username or email already exist'
+  USER_NAME_EMAIL_EXIST: 'Username or email already exist',
+  USER_UPDATE_SUCCESS: 'User Profile Updated Successfully',
+  IMAGE_UPLOAD_FAILED: 'Error occured while uploading image',
+  INCOMPLETE_DATA: 'Please fill all mandatory fields',
+  FILE_UPLOADING_FAIL: 'Error Occured while uploading file'
 
 });
