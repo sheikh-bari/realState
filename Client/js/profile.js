@@ -198,7 +198,7 @@ $(document).ready(function() {
                 $("#error-msg").text(response.message);
             }
             else if(response.success){
-                localStorage.setItem('userInfo', JSON.stringify(response));
+                localStorage.setItem('userInfo', JSON.stringify(response.data));
                 showToaster('Profile updated successfully', 'success');
                 loadAgentListings();
             }
@@ -417,6 +417,8 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+        data.AgentId = userInfo.UserId;
+        data.ID = listingId;
         saveEditedLisitng(data).then(function(data){
            console.log('response after updating listing=', data);
             var response = data;
