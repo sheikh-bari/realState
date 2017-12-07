@@ -59,9 +59,6 @@
 .listing-title, .listing-image, .edit-listing, .delete-listing{
   cursor: pointer;
 }
-=======
-
->>>>>>> production
 
 .searchIdx{
   border: 1px solid black;
@@ -628,4 +625,3 @@ div.cell {
 .realEstateAgents{
   display: inline-flex;
 }
->>>>>>> production
