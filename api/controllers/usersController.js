@@ -160,7 +160,6 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
         models.User.findOne({
           where: { Email: {[OP.eq]: req.body.email} }
         }).then(user => {
-          console.log('inside')
           if( user == null || user.dataValues.UserId == req.body.userId ) {
             var file = req.files.userImage;
             if( file && file.size > 0 ) {
@@ -212,7 +211,6 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
               }
 
             } else {
-              console.log('not up');
               models.User.update({
                 FirstName: req.body.fname,
                 LastName: req.body.lname,
@@ -241,7 +239,6 @@ user.setup = function user(app, logger, STRINGS, HTTP, models, http, request, bc
               })
             }
           } else {
-            console.log('inside2')
             logger.info(STRINGS.RESULT_FAILED);
             response.data = null;
             response.message = STRINGS.EMAIL_DUPLICATE;
