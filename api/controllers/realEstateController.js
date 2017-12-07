@@ -471,6 +471,9 @@ var listing = module.exports = {};
           Title: req.body.Title,
           createdAt: date.now,
           updatedAt: date.now,
+          Latitude: req.body.Latitude,
+          Longitude: req.body.Longitude
+
         }).then(function( listing ){
 
           logger.info ( STRINGS.RESULT_SUCCESS );

@@ -108,6 +108,7 @@ $(window).load(function() {
                         template.attr('style',"display:block;");
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
+                        template.find(".realestateAd-status")[0].innerHTML = "Available";
                         template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
 
 
@@ -140,7 +141,22 @@ $(window).load(function() {
         });
 
     };
-   
+
+    function loadAgents(){
+        getAgentsList().then(function(data){
+        console.log(data);
+        //var userInfo = getUserInfo();
+        var response = data;
+        if(response.success){
+            var agentList = response.data;
+            $("#agentCard").loadTemplate('../html/partials/_agentCard.html', agentList, { append: true, elemPerPage: 10 });            
+        }
+        else{
+            $("#error-msg").text(response.message);
+        }
+    });
+    }
+
     function listingDetails(val){
          var userInfo = getUserInfo();
         console.log(val);
@@ -156,6 +172,7 @@ $(window).load(function() {
             $('#body-content').load("partials/_listingDetails.html", function(){
                
                 document.getElementById('listing-heading').innerHTML = response.data.Title;
+                $(".realestateAd-status").html('Available');
                 document.getElementById('listing-description').innerHTML = response.data.AdDescription;
                 document.getElementById('listing-beds').innerHTML = response.data.BedRooms;
                 document.getElementById('listing-baths').innerHTML = response.data.BathRooms;
@@ -191,6 +208,7 @@ $(window).load(function() {
                     
                     carousel[0].appendChild(newCarouselImage);
                 };
+                
 
                 $('#mark-favourite').hide();
                 $('#unmark-fav').hide();
@@ -528,6 +546,13 @@ function referListingToOther(){
         }
     });
 }
+
+
+function updateProfile(){
+    alert("Not implemented yet");
+}
+
+
 
 var map, infoWindow;
 function initMap() {
