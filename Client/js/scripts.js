@@ -171,7 +171,7 @@ $(window).load(function() {
                 document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
                 document.getElementById('agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
-                document.getElementById('agent-picture').setAttribute("src", "images/te.jpg");
+                document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
                 document.getElementById('lat').value = response.data.Latitude;
                 document.getElementById('long').value = response.data.Longitude;
 
@@ -197,7 +197,10 @@ $(window).load(function() {
                 $('.hide-agent-info').hide();
                 $('.display-agent-info').hide();
 
-                response.data.FavouriteIds = [1];
+                response.data.FavouriteIds = [];
+                response.data.FavouriteAds.forEach(function(ad){
+                    response.data.FavouriteIds.push(ad.UserUserId)
+                });
 
                 if(userInfo){
                     if(userInfo.UserTypeId == 2){
@@ -513,6 +516,7 @@ function referListingToOther(){
 
     referListing(name, toEmail, description, url).then(function(data){
         console.log(data);
+        var response = data;
         if(response.success){
             $("#referrer-name").val("");
             $("#email").val("");
