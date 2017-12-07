@@ -5,7 +5,7 @@ $(document).ready(function() {
     if(userInfo){
         loadAgentListings();
         document.getElementById('profile-name').innerHTML = userInfo.FirstName+" "+userInfo.LastName;
-        document.getElementById('profile-picture').setAttribute("src", userInfo.UserImagePath);;
+        document.getElementById('profile-picture').setAttribute("src", userInfo.UserImagePath);
     }
     else if(userInfo == undefined){
         window.location.href = BASE_URL;
@@ -108,6 +108,7 @@ $(document).ready(function() {
             $("#lastname").val(userInfo.LastName);
             $("#email").val(userInfo.Email);
             $("#mobilenumber").val(userInfo.MobileNumber);
+            $("#address").val(userInfo.Address);
 
             $('.edit-profile-btn').click(function(){
                 updateProfile();
@@ -200,6 +201,7 @@ $(document).ready(function() {
             }
             else if(response.success){
                 localStorage.setItem('userInfo', JSON.stringify(response.data));
+                document.getElementById('profile-picture').setAttribute("src", response.data.UserImagePath);;
                 showToaster('Profile updated successfully', 'success');
                 loadAgentListings();
             }
