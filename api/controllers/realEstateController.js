@@ -49,6 +49,7 @@ var listing = module.exports = {};
       && ( req.body.adType === null || req.body.adType === undefined || req.body.adType.trim() === '' )) {
 
       models.RealEstateAd.findAll({
+        where: {AdStatusId: {[OP.ne]: 3}},
         attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude' ],
         order: [['createdAt','DESC']],
         include: [
@@ -93,7 +94,8 @@ var listing = module.exports = {};
       var adMediaTable = {
         model: models.AdMedia,
         duplicating: false,
-        attributes: ['ImagePath']
+        attributes: ['ImagePath'],
+        where: {AdStatusId: {[OP.ne]: 3}}
       };
 
       includeQuery.push(adMediaTable);
@@ -101,33 +103,40 @@ var listing = module.exports = {};
       var typeOfAccomodationQuery = {
         model: models.RealEstateCategory,
         duplicating: false,
-        attributes: ['CategoryName']
+        attributes: ['CategoryName'],
+        where: {AdStatusId: {[OP.ne]: 3}}
       };
       var adTypeQuery = {
         model: models.AdType,
         duplicating: false,
-        attributes: ['AdTypeName']
+        attributes: ['AdTypeName'],
+        where: {AdStatusId: {[OP.ne]: 3}}
       };
 
       if ( req.body.searchText.trim() !== '' && req.body.searchText !== null && req.body.searchText !== undefined ) {
 
         searchTextQuery = {
-          $or:[
-            {
-              city: {
-                [OP.like]: '%'+req.body.searchText+'%'
+          $and:[{
+            $or:[
+              {
+                city: {
+                  [OP.like]: '%'+req.body.searchText+'%'
+                }
+              },
+              {
+                state: {
+                  [OP.like]: '%'+req.body.searchText+'%'
+                }
+              },
+              {
+                zip: {
+                  [OP.like]: '%'+req.body.searchText+'%'
+                }
               }
-            },
-            {
-              state: {
-                [OP.like]: '%'+req.body.searchText+'%'
-              }
-            },
-            {
-              zip: {
-                [OP.like]: '%'+req.body.searchText+'%'
-              }
-            }
+            ]},
+            [
+                {AdStatusId: {[OP.ne]: 3}}
+            ]
           ]
         };
       }
@@ -217,7 +226,8 @@ var listing = module.exports = {};
       res.status( HTTP.BAD_REQUEST ).jsonp( response );
     } else {
       models.RealEstateAd.findOne({
-        where: { ID: {[OP.eq]: req.query.listing_id}},
+        
+        where: {$and: [ {ID: {[OP.eq]: req.query.listing_id}} , {AdStatusId: {[OP.ne]: 3}}]},
         include: [
           {
             model: models.AdType,
@@ -648,13 +658,13 @@ var listing = module.exports = {};
       if(req.body.userType == 2) {
         models.RealEstateAd.findAll({
           attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude' ],
-          where: { AgentId: {[OP.eq]: req.body.userId}},
+          where: {$and: [{AgentId: {[OP.eq]: req.body.userId}},{AdStatusId: {[OP.ne]: 3}}]},
           order: [['createdAt','DESC']],
           include: [
             {
               model: models.AdMedia,
               duplicating: false,
-              attributes: ['ImagePath']
+              attributes: ['ImagePath'] 
             },
             {
               model: models.AdType,

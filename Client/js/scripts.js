@@ -149,7 +149,7 @@ $(window).load(function() {
         var response = data;
         if(response.success){
             var agentList = response.data;
-            $("#agentCard").loadTemplate('../html/partials/_agentCard.html', agentList, { append: true, elemPerPage: 10 });            
+            $("#agentCard").loadTemplate('partials/_agentCard.html', agentList, { append: true, elemPerPage: 10 });            
         }
         else{
             $("#error-msg").text(response.message);
