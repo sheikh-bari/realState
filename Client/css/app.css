@@ -55,7 +55,7 @@
   font-size: 1.7em;
   margin: 0.5em 0em 0;
 }
-.listing-title, .listing-image{
+.listing-title, .listing-image, .edit-listing, .delete-listing{
   cursor: pointer;
 }
 
@@ -75,8 +75,8 @@
 }
 
 .listing-image{
-  width:89%;
-  height: 175px;
+  width:100%;
+  height: 185px;
 }
 .adCardDetails{
   font-size: 11.5px;
@@ -576,3 +576,11 @@ div.cell {
 .myprofile-content{
   padding-top:20px;
 }
+.realestateAd-status{
+  font-size: 11px;
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    text-align: center;
+    padding: 0px;
+}
+    

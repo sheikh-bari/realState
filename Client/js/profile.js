@@ -19,7 +19,7 @@ $(document).ready(function() {
     }
 
     function loadAgentListings(){
-        getListings('', '', '', '', '', '').then(function(data){
+        getUserListings(userId, userType).then(function(data){
             $('.myprofile-content').load("partials/_listingCard.html", function(){
                 if(data.success){
                     var response = data.data;
@@ -29,8 +29,8 @@ $(document).ready(function() {
                         template.attr('style',"display:block;");
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
+                        template.find(".realestateAd-status")[0].innerHTML = "Available";
                         template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
-
 
                         template.find(".realEstateCity")[0].innerHTML = response[i].City;
                         template.find(".realEstateState")[0].innerHTML = response[i].State;
@@ -65,7 +65,6 @@ $(document).ready(function() {
                                 editListing(idx);
                             });
                         };
-
                     }
 
                     var listingDetailsLinks = document.getElementsByClassName("view-listing-details");                    
@@ -81,13 +80,16 @@ $(document).ready(function() {
 
             });
         });
-    }
+    }   
 
+
+    // Displaying and getting list
     $('.myprofile-listings').click(function(){
 
         loadAgentListings();
     })
 
+    //Showing changing password form in view
     $('.myprofile-change-password').click(function(){
        
         $( ".myprofile-content" ).load( "partials/_changePassword.html", function() {
@@ -97,6 +99,7 @@ $(document).ready(function() {
         });
     })
 
+    //Shwoing editing profile form in view
     $('.myprofile-edit').click(function(){
        
         $( ".myprofile-content" ).load( "partials/_editProfile.html", function() {
@@ -114,20 +117,40 @@ $(document).ready(function() {
         });
     })
 
+    // Showing add new listing form in view
     $('.add-new-listing').click(function(){
        
         $( ".myprofile-content" ).load( "partials/_addNewListing.html", function() {
             var createListingBtn = document.getElementsByClassName("listing-new-btn");
-                $('.listing-update-btn').css("display", "none");
-                for(var i=0;i < createListingBtn.length;i++) {
-                    createListingBtn[i].addEventListener("click", function() {
-                       
-                        createListing();
-                    });
-                };
+            $('.ad-status').css("display", "none");
+            $('#listing-map').locationpicker({
+                location: {
+                    latitude: 50.5558095,
+                    longitude: 9.680844900000011
+                },
+                radius: 250,
+                inputBinding: {
+                    latitudeInput: $('#listing-latitude'),
+                    longitudeInput: $('#listing-longitude'),
+                    locationNameInput: $('#us3-address')
+                },
+                enableAutocomplete: true,
+                onchanged: function (currentLocation, isMarkerDropped) {
+                }
+            });
+
+             // Adding click event for button
+            $('.listing-update-btn').css("display", "none");
+            for(var i=0;i < createListingBtn.length;i++) {
+                createListingBtn[i].addEventListener("click", function() {
+                   
+                    createListing();
+                });
+            };
         });
     })    
     
+    // Saving password after updating
     function updatePassword(){
 
         var oldPass = $("#current-password").val(),
@@ -165,6 +188,7 @@ $(document).ready(function() {
         });
     }
 
+    // Saving profile details after updating
     function updateProfile(){
 
         var fname = $("#firstname").val(),
@@ -204,6 +228,7 @@ $(document).ready(function() {
         });
     }
 
+    // Deleting listing
     function deleteListing(id){
         console.log(id);
         var deleteConfirm = confirm("Are you sure Do you want to delete ?");
@@ -223,30 +248,9 @@ $(document).ready(function() {
         }
     };
 
-    // locates the address in google maps and add it to html page
-    function locateInMap(address){
-        var address = address || 'Germany';
-        geocoder = new google.maps.Geocoder();
-        if (geocoder) {
-            geocoder.geocode({
-                'address': address
-            }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                
-                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q="+results[0].geometry.location.lat()+","+results[0].geometry.location.lng()+"&hl=es;z=14&amp;output=embed'></iframe>";
-
-                }else{
-                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
-                }
-            });
-        }else{
-            document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
-
-        }
-    }
-
+    // Get listing details 
     function listingDetails(val){
-         var userInfo = getUserInfo();
+        var userInfo = getUserInfo();
         console.log(val);
         getListingDetails(val).then(function(response){
             console.log(response);
@@ -258,7 +262,6 @@ $(document).ready(function() {
                 document.getElementsByClassName('listing-details-banner')[0].style.display = 'none';
                 $("#listing-heading").html(response.data.Title);
 
-                //document.getElementById('listing-heading').innerHTML = response.data.Title;
                 $('#listing-description').html(response.data.AdDescription);
                 $('#listing-beds').html(response.data.BedRooms);
                 $('#listing-baths').html(response.data.BathRooms);
@@ -279,7 +282,7 @@ $(document).ready(function() {
                 // document.getElementById('listing-images').
                 var carousel = document.getElementsByClassName('listing-carousel-images');
                 console.log(carousel[0]);
-                    for(var i=1; i< response.data.AdMedia.length; i++){
+                for(var i=1; i< response.data.AdMedia.length; i++){
                     var newCarouselImage = document.createElement('div');
                     newCarouselImage.setAttribute("class", "item");
                     newCarouselImage.innerHTML = "<img src="+response.data.AdMedia[i].ImagePath+" alt='' style='width:100%;'>";
@@ -287,9 +290,6 @@ $(document).ready(function() {
                     
                     carousel[0].appendChild(newCarouselImage);
                 };
-
-                var address = response.data.Address +','+ response.data.City +','+ response.data.State+','+ response.data.Zip;
-                locateInMap(address);
 
                 if(userInfo){
                      
@@ -312,6 +312,7 @@ $(document).ready(function() {
 
     };
 
+    // Getting listing details for editing
     function editListing(id){
         console.log(id);
        
@@ -326,7 +327,7 @@ $(document).ready(function() {
                 $('#listing-kitchen').val(response.data.Kitchen);
                 $('#listing-noOfLiving').val(response.data.LivingRooms);
                 $('#listing-area').val(response.data.SquareFeet);
-                 $('#listing-lotArea').val(response.data.LotArea);
+                $('#listing-lotArea').val(response.data.LotArea);
                 $('#listing-type').val(response.data.AdType.AdTypeName);
                 //$('#listing-lotArea').val(response.data.RealEstateCategory.CategoryName);
                 $('#listing-noOfFloors').val(response.data.NumOfFloors);
@@ -349,11 +350,28 @@ $(document).ready(function() {
                         updateListing(idx);
                     });
                 };
+
+                $('#listing-map').locationpicker({
+                    location: {
+                        latitude: response.data.Latitude || 50.5558095,
+                        longitude: response.data.longitude || 9.680844900000011
+                    },
+                    radius: 250,
+                    inputBinding: {
+                        latitudeInput: $('#listing-latitude'),
+                        longitudeInput: $('#listing-longitude'),
+                        locationNameInput: $('#us3-address')
+                    },
+                    enableAutocomplete: true,
+                    onchanged: function (currentLocation, isMarkerDropped) {
+                    }
+                });
             });
           
         })
     };
 
+    // Create new listing
     function createListing(){
        
         var data = {};
@@ -375,6 +393,8 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+        data.Latitude = $('#listing-latitude').val();
+        data.longitude = $('#listing-longitude').val();
         //data.Images = listingFiles;
 
         console.log( 'after creating =',data);
@@ -391,7 +411,7 @@ $(document).ready(function() {
         })
     }
         
-
+// Save listing after editing 
     function updateListing(listingId){
         console.log('listing id in updating =', listingId);
         var data = {};
@@ -413,6 +433,7 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+        data.AdStatus = $('#listing-status').val();
 
         saveEditedLisitng(data).then(function(data){
            console.log('response after updating listing=', data);

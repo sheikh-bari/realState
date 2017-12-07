@@ -109,6 +109,7 @@ $(window).load(function() {
                         template.attr('style',"display:block;");
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
+                        template.find(".realestateAd-status")[0].innerHTML = "Available";
                         template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
 
 
@@ -155,28 +156,7 @@ $(window).load(function() {
     });
     }
 
-    // locates the address in google maps and add it to html page
-    function locateInMap(address){
-        var address = address || 'Germany';
-        geocoder = new google.maps.Geocoder();
-        if (geocoder) {
-            geocoder.geocode({
-                'address': address
-            }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                
-                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q="+results[0].geometry.location.lat()+","+results[0].geometry.location.lng()+"&hl=es;z=14&amp;output=embed'></iframe>";
-
-                }else{
-                    document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
-                }
-            });
-        }else{
-            document.getElementById('listing-map').innerHTML = "<iframe src='https://maps.google.com/maps?q=51.165691,10.451526000000058&hl=es;z=14&amp;output=embed'></iframe>";
-
-        }
-    }
-
+    
     function listingDetails(val){
          var userInfo = getUserInfo();
         console.log(val);
@@ -220,8 +200,6 @@ $(window).load(function() {
                     
                     carousel[0].appendChild(newCarouselImage);
                 };
-                var address = response.data.Address +','+ response.data.City +','+ response.data.State+','+ response.data.Zip;
-                locateInMap(address);
                 
 
                 $('#mark-favourite').hide();

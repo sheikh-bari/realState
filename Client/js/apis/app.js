@@ -115,6 +115,26 @@ function getListings(searchVal, accomodationType, bedrooms, sqft, adType, pageIn
     return deferred.promise();
 };
 
+function getUserListings(id, type){
+    var _data = { userId : id, userType : type};
+
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT + 'api/listings/user',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+}
+
 function getListingDetails(id){
     console.log('details api called');
 
