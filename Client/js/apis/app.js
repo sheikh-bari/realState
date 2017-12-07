@@ -206,14 +206,16 @@ function saveLisitng(data){
     console.log('data before api call',data);
     var formData = new FormData();
     
-    for(var i = 0; i < $('input[type=file]')[0].files.length; i++){
-        formData.append('image'+i, $('input[type=file]')[0].files[i]);
+    var i = 0;
+    for(i ; i < $('input[type=file]')[0].files.length; i++){
+        formData.append("uploadedImages[]", $('input[type=file]')[0].files[i]);
     }
+    data['totalImages'] = i;
+
     for ( var key in data ) {
         formData.append(key, data[key]);
     }
-    console.log('formdata =',formData);
-    //var _data = data;
+
     var deferred = new $.Deferred();
     $.ajax({
         url: API_ENDPOINT+'api/listing/create',
@@ -221,8 +223,8 @@ function saveLisitng(data){
         processData: false, // important
         contentType: false,
         data: formData,//JSON.stringify(_data),
-        //dataType: "json",
-        //contentType: 'application/json',
+        enctype: 'multipart/form-data',
+
         success: function (response) {
             
             deferred.resolve(response);
@@ -239,7 +241,7 @@ function saveEditedLisitng(data, listingId){
      var _data = data;
     var deferred = new $.Deferred();
     $.ajax({
-        url: API_ENDPOINT+'api/user/update',
+        url: API_ENDPOINT+'api/updateListing',
         method: 'POST',
         data: JSON.stringify(_data),
         dataType: "json",
