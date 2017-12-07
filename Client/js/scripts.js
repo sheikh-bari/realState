@@ -60,7 +60,7 @@ $(window).load(function() {
 
 
     function loadHomePage(){
-        $( "#header-content" ).load( "partials/_header.html", function() {
+        $("#header-content").load( "partials/_header.html", function() {
             document.getElementById('homeLink').innerHTML = "<a href="+BASE_URL+"><i class='glyphicon glyphicon-home'> </i>Home</a>";
             document.getElementById('aboutLink').innerHTML = "<a href="+BASE_URL+"about><i class='glyphicon glyphicon-info-sign'> </i>About Us</a>";
             document.getElementById('contactLink').innerHTML = "<a href="+BASE_URL+"contact><i class='glyphicon glyphicon-earphone'> </i>Contact</a>";
@@ -76,7 +76,6 @@ $(window).load(function() {
 
         $("#body-content").load("partials/_homeBody.html", function(){
             searchListings('');
-           //loadAgents();
         })
 
         $( "#footer-content" ).load( "partials/_footer.html", function() {
@@ -124,6 +123,8 @@ $(window).load(function() {
                         template.appendTo(".appendHere");
                     }
 
+                    loadAgents();
+
                     var listingDetailsLinks = document.getElementsByClassName("view-listing-details");
 
                     for(var i=0;i < listingDetailsLinks.length;i++) {
@@ -156,7 +157,6 @@ $(window).load(function() {
     });
     }
 
-    
     function listingDetails(val){
          var userInfo = getUserInfo();
         console.log(val);
@@ -172,6 +172,7 @@ $(window).load(function() {
             $('#body-content').load("partials/_listingDetails.html", function(){
                
                 document.getElementById('listing-heading').innerHTML = response.data.Title;
+                $(".realestateAd-status").html('Available');
                 document.getElementById('listing-description').innerHTML = response.data.AdDescription;
                 document.getElementById('listing-beds').innerHTML = response.data.BedRooms;
                 document.getElementById('listing-baths').innerHTML = response.data.BathRooms;
@@ -188,6 +189,13 @@ $(window).load(function() {
                 document.getElementById('agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
                 document.getElementById('agent-picture').setAttribute("src", "images/te.jpg");
+                document.getElementById('lat').value = response.data.Latitude;
+                document.getElementById('long').value = response.data.Longitude;
+
+                // loading maps
+
+                    //initMap();
+                //
                 
                 // document.getElementById('listing-images').
                 var carousel = document.getElementsByClassName('listing-carousel-images');
@@ -207,10 +215,12 @@ $(window).load(function() {
                 $('.hide-agent-info').hide();
                 $('.display-agent-info').hide();
 
-                response.data.FavouriteIds = [1,2,3,4,5,6,7]
+                response.data.FavouriteIds = [];
+                response.data.FavouriteAds.forEach(function(ad){
+                    response.data.FavouriteIds.push(ad.UserUserId)
+                });
 
                 if(userInfo){
-                     
                     if(userInfo.UserTypeId == 2){
                         $('.display-agent-info').hide();   
                         $('.mark-as-favourite').hide(); 
@@ -246,6 +256,22 @@ $(window).load(function() {
 $("#logout").click(function(){
     logOutUser();
 });
+
+function loadAgents(){
+    getAgentsList().then(function(data){
+        console.log(data);
+        //var userInfo = getUserInfo();
+        var response = data;
+        if(response.success){
+            var agentList = response.data;
+            $("#agentCard").loadTemplate('partials/_agentCard.html', agentList, { append: true, elemPerPage: 10 }); 
+            //$('<div/>').loadTemplate('partials/_agentCard.html', agentList, { append: true, elemPerPage: 10 }).appendTo("#agentCard");           
+        }
+        else{
+            $("#error-msg").text(response.message);
+        }
+    });
+}
 
 function setNavLinks(){
     var userInfo = getUserInfo();
@@ -477,6 +503,7 @@ function markFavourite(markFavourite){
 
     markUnmarkListing(listingId, markFavourite, userId).then(function(data){
         console.log(data);
+        var response = data;
         if(response.success){
             window.location.reload();
             showToaster('Listing marked successfully', 'success');
@@ -507,6 +534,7 @@ function referListingToOther(){
 
     referListing(name, toEmail, description, url).then(function(data){
         console.log(data);
+        var response = data;
         if(response.success){
             $("#referrer-name").val("");
             $("#email").val("");
@@ -519,9 +547,42 @@ function referListingToOther(){
     });
 }
 
+
 function updateProfile(){
     alert("Not implemented yet");
 }
 
 
 
+var map, infoWindow;
+function initMap() {
+    var latitude = $("#lat").val();
+    var longitude = $("#long").val();
+    if(latitude != "" || latitude !== undefined)
+        latitude = parseFloat(latitude);
+    if(longitude != "" || longitude !== undefined)
+        longitude = parseFloat(longitude);
+
+    var location = $("#listing-address-street").text();
+
+    var myLatLng = {lat: latitude, lng: longitude};
+
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 16,
+      center: myLatLng
+    });
+
+    var marker = new google.maps.Marker({
+      position: myLatLng,
+      map: map,
+      title: location
+    });
+
+    marker.info = new google.maps.InfoWindow({
+      content: '<b>Location:</b> ' + location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      marker.info.open(map, marker);
+    });
+}

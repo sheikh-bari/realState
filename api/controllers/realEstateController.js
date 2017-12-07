@@ -8,10 +8,6 @@ const fs = require('fs');
 
 var listing = module.exports = {};
 
-
-
-
-
 /**
  * user Class.
  * @class User
@@ -59,7 +55,7 @@ var listing = module.exports = {};
           {
             model: models.AdMedia,
             duplicating: false,
-            attributes: ['ImagePath'],
+            attributes: ['ImagePath']
           },
           {
             model: models.AdType,
@@ -72,8 +68,7 @@ var listing = module.exports = {};
             attributes: ['CategoryName']
           }
         ],
-        group: ['RealEstateAd.Id','AdMedia.Id'],
-        offset: pagination,
+        group: ['RealEstateAd.Id','AdMedia.Id']
         
       }).then( listings => {
         response.success = true;
@@ -181,9 +176,7 @@ var listing = module.exports = {};
         order: [['createdAt','DESC']],
         where: searchTextQuery,
         include: includeQuery,
-        group: ['RealEstateAd.Id','AdMedia.Id'],
-        offset: pagination,
-        limit: 12
+        group: ['RealEstateAd.Id','AdMedia.Id']
       }).then(listings =>{
         logger.info( STRINGS.RESULT_SUCCESS );
         response.success = true;
@@ -241,6 +234,10 @@ var listing = module.exports = {};
           {
             model: models.AdMedia,
             attributes: ['ImagePath']
+          },
+          {
+            model: models.FavouriteAds,
+            attributes: ['UserUserId']
           }
         ]
       }).then(listing => {
@@ -290,8 +287,73 @@ var listing = module.exports = {};
     } 
   });
 
+  /**
+   * @api {post}  /api/user/deleteListing  delete listing.
+   * @apiName deleteListing
+   * @apiGroup realEstateController
+   *
+   * @apiSuccess (Success) {JSON} Delete Listing.
+   */
+  app.post('/api/deleteListing', function updateUserCallBack( req, res ) {
+    logger.info('Inside post /api/realEstateController/deleteListing');
+    var response = {
+      success: false
+    };
 
-   /**
+    if( (req.body.Id !== undefined && req.body.ID != '') ) {
+      models.RealEstateAd.findOne({
+        where: { ID: {[OP.eq]: req.body.Id} }
+      }).then(list => {
+          if( list == null || list.dataValues.ID == req.body.Id ) {
+          models.RealEstateAd.update({
+            AdStatusId: 3
+          },
+          {
+            where: {
+              ID: {[OP.eq]: req.body.Id}
+            }
+          }).then(function(lists) {
+            models.User.findById(req.body.userId).then(function(deletedList){
+              logger.info ( STRINGS.RESULT_SUCCESS );          
+              response.success = true;
+              response.message = STRINGS.RESULT_SUCCESS;
+              response.data = deletedList;
+              res.status( HTTP.OK ).jsonp( response );
+            })
+          }).catch(function(err) {
+            logger.info(STRINGS.RESULT_FAILED);
+            response.success = false;
+            response.data = err;
+            response.message = STRINGS.ERROR_MESSAGE;
+            res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+          });
+        } else {
+          logger.info(STRINGS.RESULT_FAILED);
+          response.success = false;
+          response.data = null;
+          response.message = STRINGS.ERROR_MESSAGE;
+          res.status( HTTP.OK ).jsonp( response );
+        }
+      }).catch(function(err) {
+        logger.info(STRINGS.RESULT_FAILED);
+        console.log(err);
+        response.success = false;
+        response.message = STRINGS.ERROR_MESSAGE;
+        response.data = err
+        res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( response );
+      })      
+  } else {
+    logger.info(STRINGS.RESULT_FAILED);
+    response.success = false;
+    response.data = null;
+    response.message = STRINGS.ACCESS_DENIED;
+    res.status( HTTP.BAD_REQUEST ).jsonp( response );
+    }
+  });
+
+
+
+  /**
    * @api {post}  /api/favoriteListing  Adding/Deleting new Listing.
    * @apiName favoriteListing
    * @apiGroup Listing
@@ -359,11 +421,8 @@ var listing = module.exports = {};
    * @apiSuccess (Success) {JSON} new listing.
    */
 
-  app.post('/api/listing/create', function InsertListingCallback(req, res){
-
-    logger.info('Inside post /api/listing');
-
- 
+  app.post('/api/listing/create',function(req,res){
+    logger.info('Inside post /api/listing/create');
     var response = {
       success: false
     };
@@ -395,7 +454,7 @@ var listing = module.exports = {};
           BedRooms: req.body.BedRooms, 
           BathRooms: req.body.BathRooms, 
           Kitchen: req.body.Kitchen, 
-          LivingRooms: req.body.living_room,
+          LivingRooms: req.body.LivingRooms,
           SquareFeet: req.body.SquareFeet, 
           Price: req.body.Price,
           Address: req.body.Address, 
@@ -408,10 +467,13 @@ var listing = module.exports = {};
           LotArea: req.body.lot_area,
           AdStatusId: 1,
           AdTypeId: req.body.AdTypeName,
-          RealEstateCategoryId: req.body.real_estate_category_id, 
+          RealEstateCategoryId: req.body.RealEstateCategory, 
           Title: req.body.Title,
           createdAt: date.now,
           updatedAt: date.now,
+          Latitude: req.body.Latitude,
+          Longitude: req.body.Longitude
+
         }).then(function( listing ){
 
           logger.info ( STRINGS.RESULT_SUCCESS );
@@ -474,11 +536,6 @@ var listing = module.exports = {};
               response.message = STRINGS.FILE_UPLOADING_FAIL;
               res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( err );
             });
-            response.success = true;
-            response.data = listing;
-            response.message = STRINGS.AD_CREATED_SUCCESS;
-            res.status( HTTP.OK ).jsonp( response );
-            return;
           }
          
         }).catch(function( err ) {
@@ -489,8 +546,6 @@ var listing = module.exports = {};
           response.message = STRINGS.AD_CREATED_FAIL;
           res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( err );
         });
-
-
       } else {
         logger.info(STRINGS.INCOMPLETE_DATA);
         response.message = STRINGS.INCOMPLETE_DATA;
@@ -503,6 +558,7 @@ var listing = module.exports = {};
       response.data = null;
       res.status( HTTP.OK ).jsonp( response );
     }
+  });
 
 
   /**
@@ -519,13 +575,13 @@ var listing = module.exports = {};
     var date = new Date();
     var me = this;
     var response = {};
-    console.log(req.body);
+
     models.RealEstateAd.update({
      Title: req.body.Title,                              
      BedRooms: req.body.BedRooms, 
      BathRooms: req.body.BathRooms, 
      Kitchen: req.body.Kitchen,
-     AdType: req.body.AdTypeName,
+     AdType: req.body.AdTypeName, 
      LivingRooms: req.body.LivingRooms,
      SquareFeet: req.body.SquareFeet, 
      Price: req.body.Price,
@@ -556,7 +612,6 @@ var listing = module.exports = {};
         response.data = listing;
         res.status( HTTP.OK ).jsonp( response );
       }
-      
     }).catch(function( err ) {
       console.log(err);
       logger.info(STRINGS.RESULT_FAILED);

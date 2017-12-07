@@ -175,20 +175,24 @@ function changePassword(oldPass, newPass, cnewPass, userType, userId){
     return deferred.promise();  
 };
 
-function updateUserDetails(fname, lname, email, mnumber, userId){
+function updateUserDetails(fname, lname, email, mobile, address, userId){
 
-    var _data = { fname : fname, lname : lname, email : email, userId : userId};
+    var _data = { fname : fname, lname : lname, email : email, mobile : mobile, address: address, userId : userId};
+    var formData = new FormData();
+    formData.append('userImage', $('input[type=file]')[0].files[0]);
+    for ( var key in _data ) {
+        formData.append(key, _data[key]);
+    }
+
     var deferred = new $.Deferred();
     $.ajax({
         url: API_ENDPOINT+'api/user/update',
         method: 'POST',
-        data: JSON.stringify(_data),
-        dataType: "json",
-        contentType: 'application/json',
+        processData: false, // important
+        contentType: false,
+        data: formData,
         success: function (response) {
-            
             deferred.resolve(response);
-
         },
         error: function (response){
             deferred.reject(response);
@@ -230,8 +234,7 @@ function saveLisitng(data){
     for ( var key in data ) {
         formData.append(key, data[key]);
     }
-    console.log('formdata =',formData);
-    //var _data = data;
+
     var deferred = new $.Deferred();
     $.ajax({
         url: API_ENDPOINT+'api/listing/create',
@@ -292,10 +295,11 @@ function getAgentsList(){
 };
 
 function markUnmarkListing(listingId, mark, userId){
-    var _data = { listingid : listingId, markval : mark, userid: userId };
+    var _data = { AdID : listingId, Status : mark, UserID: userId };
+    
     var deferred = new $.Deferred();
     $.ajax({
-        url: API_ENDPOINT+'api/markunmarklisting',
+        url: API_ENDPOINT+'api/favoriteListing',
         method: 'POST',
         data: JSON.stringify(_data),
         dataType: "json",
@@ -311,10 +315,10 @@ function markUnmarkListing(listingId, mark, userId){
 }
 
 function referListing(name, toEmail, description, url){
-    var _data = { name : name, toemail : toEmail, description: description, url: url };
+    var _data = { name : name, email : toEmail, subject: description, url: url };
     var deferred = new $.Deferred();
     $.ajax({
-        url: API_ENDPOINT+'api/referlisting',
+        url: API_ENDPOINT+'api/referListing',
         method: 'POST',
         data: JSON.stringify(_data),
         dataType: "json",

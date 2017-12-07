@@ -1673,6 +1673,7 @@ a.in-box:hover {
 .map-buy-single1 {
   border: 1px solid #D5D5D5;
   padding: 1em;
+  margin-bottom: 20px;
 }
 .map-buy-single1 iframe{
 	border: none;
