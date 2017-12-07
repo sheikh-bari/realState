@@ -477,8 +477,6 @@ var listing = module.exports = {};
           response.message = STRINGS.AD_CREATED_FAIL;
           res.status( HTTP.INTERNAL_SERVER_ERROR ).jsonp( err );
         });
-
-
       } else {
         logger.info(STRINGS.INCOMPLETE_DATA);
         response.message = STRINGS.INCOMPLETE_DATA;
@@ -492,7 +490,6 @@ var listing = module.exports = {};
       res.status( HTTP.OK ).jsonp( response );
     }
   });
-
 
 
   /**

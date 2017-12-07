@@ -22,7 +22,9 @@ message.setup = function user(app, logger, STRINGS, HTTP, models, http, request,
    */
   app.post('/api/referListing', function InsertUserCallback( req, res ) {
     logger.info('Inside post /api/messageController');
-
+    var response = {
+      success: false
+    };
     
     var transporter = nodemailer.createTransport({
      service: 'gmail',
@@ -36,19 +38,23 @@ message.setup = function user(app, logger, STRINGS, HTTP, models, http, request,
       from: 'Group 15 & 19 <omer.aslamteam@gmail.com>', 
       to: req.body.email,
       subject: req.body.subject,
-      html: "<p> Mr "+ req.body.name+" refer this property to you <br> This is a perfect house for purchasing. Feel free to contact with the Agent <br> <br></p> <a href='" + req.body.url + "'>"
+      html: "<p> Mr "+ req.body.name+" refer this property to you <br> This is a perfect house for purchasing. Feel free to contact with the Agent. <br> <br> For Checking the Property please <a href='" + req.body.url + "'> Click here </a> </p>"
     };
 
     transporter.sendMail(mailOptions, function (err, info) {
       if(err){
         console.log(err);
         logger.info(STRINGS.RESULT_FAILED);
+        response.success = false;
         response.message = STRINGS.ERROR_MESSAGE;
-        res.status( HTTP.OK ).jsonp( err );
+        response.data = err;
+        res.status( HTTP.OK ).jsonp( response );
       }else{ 
         logger.info ( STRINGS.RESULT_SUCCESS );
-        response.message = STRINGS.RESULT_SUCCESS;
-        res.status( HTTP.OK ).jsonp( info );
+        response.success = true;
+        response.message = STRINGS.USER_MESSAGE_SEND;
+        response.data = info;
+        res.status( HTTP.OK ).jsonp( response );
       }    
     });  
   });
