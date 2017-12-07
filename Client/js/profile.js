@@ -23,6 +23,7 @@ $(document).ready(function() {
     function loadAgentListings(){
         getUserListings(userId, userType).then(function(data){
             $('.myprofile-content').load("partials/_listingCard.html", function(){
+                $(".agent-section").css("display","none");
                 if(data.success){
                     var response = data.data;
 
@@ -228,7 +229,8 @@ $(document).ready(function() {
                 localStorage.setItem('userInfo', JSON.stringify(response.data));
                 document.getElementById('profile-picture').setAttribute("src", response.data.UserImagePath);;
                 showToaster('Profile updated successfully', 'success');
-                loadAgentListings();
+                //loadAgentListings();
+                $('.myprofile-edit').click();
             }
             
         });
