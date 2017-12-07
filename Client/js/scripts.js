@@ -171,7 +171,7 @@ $(window).load(function() {
                 document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
                 document.getElementById('agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
-                document.getElementById('agent-picture').setAttribute("src", "images/te.jpg");
+                document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
                 document.getElementById('lat').value = response.data.Latitude;
                 document.getElementById('long').value = response.data.Longitude;
 
