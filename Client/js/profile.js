@@ -7,6 +7,7 @@ $(document).ready(function() {
         userId = userInfo.UserId;
         loadAgentListings();
         document.getElementById('profile-name').innerHTML = userInfo.FirstName+" "+userInfo.LastName;
+        document.getElementById('profile-picture').setAttribute("src", userInfo.UserImagePath);
     }
     else if(userInfo == undefined){
         window.location.href = BASE_URL;
@@ -111,6 +112,7 @@ $(document).ready(function() {
             $("#lastname").val(userInfo.LastName);
             $("#email").val(userInfo.Email);
             $("#mobilenumber").val(userInfo.MobileNumber);
+            $("#address").val(userInfo.Address);
 
             $('.edit-profile-btn').click(function(){
                 updateProfile();
@@ -223,7 +225,8 @@ $(document).ready(function() {
                 $("#error-msg").text(response.message);
             }
             else if(response.success){
-                localStorage.setItem('userInfo', JSON.stringify(response));
+                localStorage.setItem('userInfo', JSON.stringify(response.data));
+                document.getElementById('profile-picture').setAttribute("src", response.data.UserImagePath);;
                 showToaster('Profile updated successfully', 'success');
                 loadAgentListings();
             }
@@ -303,10 +306,20 @@ $(document).ready(function() {
                 document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
                 $('#agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
-                document.getElementById('agent-picture').setAttribute("src", "images/te.jpg");
+                document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
                 document.getElementById('lat').value = response.data.Latitude;
                 document.getElementById('long').value = response.data.Longitude;
                 
+                $('#mark-favourite').hide();
+                $('#unmark-fav').hide();
+                $('.hide-agent-info').hide();
+                $('.display-agent-info').hide();
+
+                response.data.FavouriteIds = [];
+                response.data.FavouriteAds.forEach(function(ad){
+                    response.data.FavouriteIds.push(ad.UserUserId)
+                });
+
                 // document.getElementById('listing-images').
                 var carousel = document.getElementsByClassName('listing-carousel-images');
                 console.log(carousel[0]);
@@ -322,26 +335,32 @@ $(document).ready(function() {
                     locateInMap(address);
                 };
 
-                //loading map
-                initMap();
-                //
-
                 if(userInfo){
-                     
                     if(userInfo.UserTypeId == 2){
                         $('.display-agent-info').hide();   
                         $('.mark-as-favourite').hide(); 
                         $('.login-message').hide();                    
-                    }else{
+                    }
+                    else{
+                        $('.display-agent-info').show(); 
                         $('.login-message').hide();
-                        $('.mark-as-favourite').show();   
+                        if($.inArray( userInfo.UserId , response.data.FavouriteIds) < 0){
+                            $('#mark-favourite').show();
+                            $('#unmark-fav').hide();
+                        }
+                        else{
+                            $('#mark-favourite').hide();
+                            $('#unmark-fav').show();
+                        }
                     }
                 } else{
-                   
-                    $('.display-agent-info').hide();
+                   $('.display-agent-info').hide();
                     $('.login-message').show(); 
                     $('.mark-as-favourite').hide();                      
                 }
+
+                //loading map
+                initMap();
             });
         })
 
@@ -478,7 +497,6 @@ $(document).ready(function() {
         data.AdStatus = $('#listing-status').val();
         data.Latitude = $('#listing-latitude').val();
         data.Longitude = $('#listing-longitude').val();
-
         data.AgentId = userInfo.UserId;
         data.ID = listingId;
         saveEditedLisitng(data).then(function(data){
