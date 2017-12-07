@@ -594,7 +594,10 @@ var listing = module.exports = {};
      NumOfFloors: req.body.NumOfFloors, 
      LotArea: req.body.LotArea, 
      createdAt: date.now,
-     updatedAt: date.now
+     updatedAt: date.now,
+    Latitude: req.body.Latitude,
+    Longitude: req.body.Longitude
+    
     }, {
       where: {
         $and: [{ID: {[OP.eq]: req.body.ID}}, {AgentId: {[OP.eq]: req.body.AgentId}}]
