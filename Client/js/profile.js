@@ -393,8 +393,12 @@ $(document).ready(function() {
         data.State = $('#listing-state').val();
         data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
+
         data.Latitude = $('#listing-latitude').val();
         data.longitude = $('#listing-longitude').val();
+
+        data.AgentId = userInfo.UserId;
+
         //data.Images = listingFiles;
 
         console.log( 'after creating =',data);
