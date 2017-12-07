@@ -278,6 +278,8 @@ $(document).ready(function() {
                 $('#agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
                 document.getElementById('agent-picture').setAttribute("src", "images/te.jpg");
+                document.getElementById('lat').value = response.data.Latitude;
+                document.getElementById('long').value = response.data.Longitude;
                 
                 // document.getElementById('listing-images').
                 var carousel = document.getElementsByClassName('listing-carousel-images');
@@ -293,6 +295,10 @@ $(document).ready(function() {
                     var address = response.data.Address +','+ response.data.City +','+ response.data.State+','+ response.data.Zip;
                     locateInMap(address);
                 };
+
+                //loading map
+                initMap();
+                //
 
                 if(userInfo){
                      
@@ -458,4 +464,37 @@ function checkUploadedFile(){
         document.getElementById("listing-images").innerHTML = txt;
 
     }
+
+var map, infoWindow;
+function initMap() {
+    var latitude = $("#lat").val();
+    var longitude = $("#long").val();
+    if(latitude != "" || latitude !== undefined)
+        latitude = parseFloat(latitude);
+    if(longitude != "" || longitude !== undefined)
+        longitude = parseFloat(longitude);
+
+    var location = $("#listing-address-street").text();
+
+    var myLatLng = {lat: latitude, lng: longitude};
+
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 16,
+      center: myLatLng
+    });
+
+    var marker = new google.maps.Marker({
+      position: myLatLng,
+      map: map,
+      title: location
+    });
+
+    marker.info = new google.maps.InfoWindow({
+      content: '<b>Location:</b> ' + location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      marker.info.open(map, marker);
+    });
+}
 
