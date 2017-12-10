@@ -108,17 +108,18 @@ $(window).load(function() {
                         template.attr('style',"display:block;");
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
-                        template.find(".realestateAd-status")[0].innerHTML = "Available";
-                        template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
+                        //template.find(".realestateAd-status")[0].innerHTML = "Available";
+                        template.find(".realestateAd-type")[0].innerHTML = response[i].AdType.AdTypeName;
+                        //template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
+                        template.find(".realEstateBeds")[0].innerHTML = response[i].BedRooms || '3 Beds';
+                        template.find(".realEstateType")[0].innerHTML = response[i].RealEstateCategory.CategoryName;
+                        template.find(".realEstateAddress")[0].innerHTML = response[i].City+", "+response[i].State+", 36037.";
+                        //template.find(".realEstateCity")[0].innerHTML = response[i].City;
+                        //template.find(".realEstateState")[0].innerHTML = response[i].State;
+                        template.find(".btn-link")[0].innerHTML = "<a href='javascript:' id=listing-link-"+i+" data="+response[i].Id+" class='hvr-sweep-to-right more view-listing-details'>See Details</a>";
 
-
-                        template.find(".realEstateCity")[0].innerHTML = response[i].City;
-                        template.find(".realEstateState")[0].innerHTML = response[i].State;
-
-
-                        template.find(".adImage")[0].innerHTML = "<img id=listing-image-"+i+" class='listing-image view-listing-details' src='" + response[i].AdMedia[0].ImagePath + "' data="+response[i].Id+" alt=''>";// <span class='four listing-price'>$"+response[i].Price+"</span>";
+                        template.find(".adImage")[0].innerHTML = "<img id=listing-image-"+i+" class='listing-image view-listing-details' src='" + response[i].AdMedia[0].ImagePath + "' data="+response[i].Id+" alt=''> <span class='four listing-price'>$"+response[i].Price+"</span>";
                         var exe = template.find(".adImage")[0];
-
                         // after adding all details appending the template
                         template.appendTo(".appendHere");
                     }
@@ -399,12 +400,14 @@ function renderUserConversations(){
         getUserConversations(userInfo.UserId).then(function(data){
         console.log(data);
         var response = data;
+
         response.data.forEach(function(obj){
             obj.image = userInfo.UserId == obj.SenderID ? obj.ReceiverImage : obj.SenderImage;
             obj.Name = userInfo.UserId == obj.SenderID ? obj.ReceiverName : obj.SendererName;
             obj.UserId = userInfo.UserId == obj.SenderID ? obj.ReceiverID : obj.SenderID;
         });
         if(response.success){
+            
             $("#conversation-container").loadTemplate($("#msg-template"), response.data, { append: true, elemPerPage: 10 });
         }
         else{
