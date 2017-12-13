@@ -444,10 +444,11 @@ function loadConversation(el){
         else{
             $("#error-msg").text(response.message);
         }
-        console.log(document.getElementsByClassName("user-messages"));
+        
         var chatDivHeight = document.getElementsByClassName("user-messages")[0].scrollHeight;
             $('.user-messages').animate({scrollTop:chatDivHeight}, 'slow');
-            
+        document.getElementsByClassName("input-message")[0].style.display = 'block';
+            console.log(document.getElementsByClassName("input-message"));
     });
 }
 

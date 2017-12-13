@@ -119,36 +119,27 @@
 				<div id="msg-thread-container">
 					</div>
 
-				
-			</div>
-			
-			<div class="row input-message">
+			<div class="row input-message" style="position: absolute;width: 100%; bottom: 10px">
 				<div class="col-md-11">
 					<input type="text" id="text-msg" class="form-control">
 					<!-- <textarea id="text-msg" class="form-control" rows="1" style="resize: none;"></textarea> -->
 				</div>
-				<div class="col-md-1" style="padding:0px;">
-					<input type="hidden" name="txt-user-id" id="txt-user-id" value="">
+				<div class="col-md-1" style="padding:0px; text-align: center;">
+					
+					<!-- <input type="hidden" name="txt-user-id" id="txt-user-id" value=""> -->
 					<input type="button"  name="btn-send-msg" class="btn btn-default" value="Send"  onclick="postMessage()">
 				</div>
 			</div>
+				
+			</div>
+			
+			
 		</div>
 	</div>
 </div>
 
 
-
-
-<!--//contact-->
-<!--footer-->
-	<div id="footer-content"></div>
-<!--//footer-->
-<!--<script src="/js/libs/jquery.min.js"></script>-->
-<!--&lt;!&ndash; Custom Theme files &ndash;&gt;-->
-<!--&lt;!&ndash;menu&ndash;&gt;-->
-<!--<script src="/js/scripts.js"></script>-->
-<!--<script type="text/javascript" src="/js/apis/app.js"></script>-->
-<!--<script type="text/javascript" src="/js/script-omer.js"></script>-->
+	<div id="footer-content" style="position: fixed;width: 100%;bottom: 0px"></div>
 
 </body>
 </html>
