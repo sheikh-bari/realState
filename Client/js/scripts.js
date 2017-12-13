@@ -444,6 +444,10 @@ function loadConversation(el){
         else{
             $("#error-msg").text(response.message);
         }
+        console.log(document.getElementsByClassName("user-messages"));
+        var chatDivHeight = document.getElementsByClassName("user-messages")[0].scrollHeight;
+            $('.user-messages').animate({scrollTop:chatDivHeight}, 'slow');
+            
     });
 }
 
@@ -491,6 +495,8 @@ function sendMsgToAgent(){
             if(response.success){
                 $("#msg-text").val("")
                 showToaster('Message sent successfully', 'success');
+                var chatDivHeight = document.getElementsByClassName("user-messages")[0].scrollHeight;
+            $('.user-messages').animate({scrollTop:chatDivHeight}, 'slow');
             }
             else{
                 $("#error-msg").text(response.message);

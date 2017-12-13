@@ -671,7 +671,7 @@ div.cell {
 }
 
 .user-messages{
-  height: 58vh;
+  height: 60vh;
   overflow: scroll;
 }
 .user-names{
@@ -682,9 +682,10 @@ div.cell {
 .input-message{
   border-top: 1px solid lightgrey;
   margin: 0px;
-  padding-top:8px;
+  padding-top:6px;
+ /*  padding-top:8px;
   height: 10vh;
-  overflow: scroll;
+  overflow: scroll;*/
 }
 
 .container-msg-users:hover{
@@ -694,13 +695,13 @@ div.cell {
 .receiver-message{
   padding:4px 12px;
   width: fit-content;
-  background: #28db933b;
+  background: #28db938c;
   border-radius: 0px 14px 0px 14px;
 }
 
 .sender-message{
   float: right;
-  background: #c5d2cd3b;
+  background: #c5d2cd7d;
   width: fit-content;
   padding: 4px 12px;
    border-radius: 14px 0px 14px 0px;
