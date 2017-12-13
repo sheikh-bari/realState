@@ -14,6 +14,8 @@ $(document).ready(function() {
     }
 
 
+    
+
     if(userType == 1){
         $('.add-new-listing').css("display", "none");
     }
@@ -30,22 +32,22 @@ $(document).ready(function() {
                         template.attr('style',"display:block;");
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
-                        //template.find(".realestateAd-status")[0].innerHTML = "Available";
-                        template.find(".realestateAd-type")[0].innerHTML = response[i].AdType.AdTypeName;
-                        //template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
-                        template.find(".realEstateBeds")[0].innerHTML = response[i].BedRooms || '3 Beds';
-                        template.find(".realEstateType")[0].innerHTML = response[i].RealEstateCategory.CategoryName;
-                        template.find(".realEstateAddress")[0].innerHTML = response[i].City+", "+response[i].State+", 36037.";
-                        //template.find(".realEstateCity")[0].innerHTML = response[i].City;
-                        //template.find(".realEstateState")[0].innerHTML = response[i].State;
-                        template.find(".btn-link")[0].innerHTML = "<a href='javascript:' id=listing-link-"+i+" data="+response[i].Id+" class='hvr-sweep-to-right more view-listing-details'>See Details</a>";
+                        template.find(".realestateAd-status")[0].innerHTML = "Available";
+                        template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
 
-                        template.find(".adImage")[0].innerHTML = "<img id=listing-image-"+i+" class='listing-image view-listing-details' src='" + response[i].AdMedia[0].ImagePath + "' data="+response[i].Id+" alt=''> <span class='four listing-price'>$"+response[i].Price+"</span>";
+                        template.find(".realEstateCity")[0].innerHTML = response[i].City;
+                        template.find(".realEstateState")[0].innerHTML = response[i].State;
+
+                        template.find(".adImage")[0].innerHTML = "<img id=listing-image-"+i+" class='listing-image view-listing-details' src='" + response[i].AdMedia[0].ImagePath + "' data="+response[i].Id+" alt=''>";// <span class='four listing-price'>$"+response[i].Price+"</span>";
                         var exe = template.find(".adImage")[0];
+                        if(userType == 2){
+                            template.find(".actionBtns")[0].innerHTML = "<span id=editListing-"+i+" class='label label-primary edit-listing' data='" +response[i].Id+ "'>Edit</span>&nbsp;&nbsp;<span id=deleteListing-"+i+" class='label label-danger delete-listing' data='" +response[i].Id+ "'>Delete</span>";
+                        }
+                        
                         // after adding all details appending the template
                         template.appendTo(".appendHere");
                     }
-                    
+
                     if(userType == 2){
 
                         var deleteListingLinks = document.getElementsByClassName("delete-listing");

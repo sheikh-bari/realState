@@ -39,6 +39,60 @@ function registerUser(firstName,lastName,email,mobile, userName, password, confi
     return deferred.promise();
 };
 
+function getUserConversations(userId){
+    
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/GetAllConversations?receiverID=' + userId,
+        method: 'GET',
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+};
+
+function getMessagesByConId(conId){
+    
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/GetAllMessages?conversationID=' + conId,
+        method: 'GET',
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+};
+
+function postMessageToUser(senderId, receiverId, msgTxt){
+    var _data = { senderId : senderId, receiverId : receiverId, msgTxt : msgTxt};
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/PostMessage',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+};
 
 function getListings(searchVal, accomodationType, bedrooms, sqft, adType, pageIndex){
 
@@ -222,3 +276,59 @@ function saveEditedLisitng(data, listingId){
     return deferred.promise();  
 };
 
+function getAgentsList(){
+    
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/GetAgentListing',
+        method: 'GET',
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+};
+
+function markUnmarkListing(listingId, mark, userId){
+    var _data = { AdID : listingId, Status : mark, UserID: userId };
+    
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/favoriteListing',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+}
+
+function referListing(name, toEmail, description, url){
+    var _data = { name : name, email : toEmail, subject: description, url: url };
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: API_ENDPOINT+'api/referListing',
+        method: 'POST',
+        data: JSON.stringify(_data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function (response) {
+            deferred.resolve(response);
+        },
+        error: function (response){
+            deferred.reject(response);
+        }
+    });
+    return deferred.promise();
+}

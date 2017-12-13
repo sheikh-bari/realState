@@ -55,7 +55,7 @@
   font-size: 1.7em;
   margin: 0.5em 0em 0;
 }
-
+<<<<<<< HEAD
 .listing-title, .listing-image, .edit-listing, .delete-listing{
   cursor: pointer;
 }
@@ -65,25 +65,26 @@
 }
 
 .realEstateAd{
- /* border: 1px solid lightgrey;*/
- box-shadow: 1px 1px 1px 1px lightgrey;
+  border: 1px solid lightgrey;
+
   margin:15px 0px;
 
 }
 
+.listing-title, .listing-image{
+  cursor: pointer;
+}
+
 .adImage{
   text-align: center;
-  border-bottom: 1px solid lightgrey;
 }
 
 .listing-image{
-  width: 100%;
-    height: 100%;
-    /* width: 185px; */
-    min-height: 195px
+  width:100%;
+  height: 185px;
 }
 .adCardDetails{
-  font-size: 13px;
+  font-size: 11.5px;
   
 }
 .adCardsAttribute{
@@ -96,8 +97,6 @@
 }
 .realEstateProperties{
   display: inline-flex;
-   margin:0px !important;
-   padding:0px !important;
 }
 .divider{
   margin-top: 5px;
@@ -117,6 +116,12 @@
 .companyDescription{
   color:darkgrey;
 }
+
+
+
+
+
+
 
 .carousel {
   position: relative;
@@ -461,16 +466,17 @@
 
 /* Chat containers */
 .container-msg {
-    
-    padding: 8px;
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    padding: 10px;
     cursor: pointer;
 }
 
-.container-msg-users{
-border-bottom: 1px solid #dedede;
-}
-
 /* Darker chat container */
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
 
 /* Clear floats */
 .container-msg::after {
@@ -482,10 +488,9 @@ border-bottom: 1px solid #dedede;
 /* Style images */
 .container-msg img {
     float: left;
-    max-width: 40px;
-    width:38px;
-    height:38px;
-    margin-top: 5px;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
     border-radius: 50%;
 }
 
@@ -498,28 +503,23 @@ border-bottom: 1px solid #dedede;
 
 /* Style time text */
 .time-right {
+    float: right;
     color: #aaa;
     font-size: 11px;
     color: #333;
-    text-align: right;
-    margin-top:4px;
-}
-
-.chatDateTime{
-    color: grey;
-    font-size: 11px;
-    margin-top: 4px;
 }
 
 /* Style time text */
 .time-left {
-    /*float: left;*/
+    float: left;
     color: #999;
     font-size: 11px;
     color: #333;
 }
 
 .msg-list-heading{
+    border-radius: 4px;
+    height: 40px;
     text-align: -webkit-center;
     padding-top: 6px;
     border-bottom: 1.8px solid #CCC;
@@ -541,13 +541,12 @@ border-bottom: 1px solid #dedede;
 }
 
 .msg-name-heading{
-    margin-bottom: 6px;
+    margin-bottom: 10px;
     font-weight: bold;
 }
 
 .msg-text{
   font-size: 13px;
-  color:grey;
 }
 
 .msg-thread{
@@ -564,7 +563,7 @@ div.wrap {
 }
 
 div.cell {
-    /*display: table-cell;*/
+    display: table-cell;
     vertical-align: bottom;
     padding: 5px;
     margin-bottom: 5px;
@@ -584,14 +583,15 @@ div.cell {
   padding-top:20px;
 }
 
-.roundEdgedLabels{
+.realestateAd-status{
   font-size: 11px;
     border: 1px solid lightgrey;
     border-radius: 10px;
     text-align: center;
     padding: 0px;
-    margin-top:3px;
 }
+    
+
 
 .realEstateAgent{
   border: 1px solid lightgrey;
@@ -624,97 +624,4 @@ div.cell {
 }
 .realEstateAgents{
   display: inline-flex;
-}
-
-.textOverflow{
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  padding:0px !important;
-  text-transform: capitalize;
-}
-
-.listing-title{
-  text-transform: capitalize;
-  font-size: 17px;
-  font-weight: bold;
-}
-
-.listing-details{
-  color:grey;
-  font-size: 13px;
-}
-
-.message-container{
-  height: 75vh;
-  border: 1px solid lightgrey;
-  margin:10px;
-  box-shadow: 1px 1px 1px 1px lightgrey;
-}
-
-.message-rightCol{
-  height: 75vh;
-   padding: 0px;
-}
-
-.message-leftCol{
-  border-right: 1px solid lightgrey;
-  height: 75vh;
-  padding: 0px;
-  
-}
-
-.leftCol-header, .rightCol-header{
-  padding: 5px;
-  border-bottom: 1px solid lightgrey;
-  text-align: center;
-}
-
-.user-messages{
-  height: 60vh;
-  overflow: scroll;
-}
-.user-names{
-  height:67vh;
-  overflow: scroll;
-}
-
-.input-message{
-  border-top: 1px solid lightgrey;
-  margin: 0px;
-  padding-top:6px;
- /*  padding-top:8px;
-  height: 10vh;
-  overflow: scroll;*/
-}
-
-.container-msg-users:hover{
-  background: lightgrey;
-}
-
-.receiver-message{
-  padding:4px 12px;
-  width: fit-content;
-  background: #28db938c;
-  border-radius: 0px 14px 0px 14px;
-}
-
-.sender-message{
-  float: right;
-  background: #c5d2cd7d;
-  width: fit-content;
-  padding: 4px 12px;
-   border-radius: 14px 0px 14px 0px;
-  
-}
-
-.conversation-message{
-  font-size: smaller;
-}
-.conversation-image{
-    float: left;
-    max-width: 40px;
-    width:38px;
-    height:38px;
-    border-radius: 50%;
 }
