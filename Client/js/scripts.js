@@ -473,10 +473,14 @@ function postMessage(){
             if(response.success){
                 var msg = {SenderImage : userInfo.UserImagePath , MessageText : msgText, MsgDate : "now"};
                 $('<div/>').loadTemplate($("#msg-template-sender"), msg, { append: true, elemPerPage: 10 }).appendTo("#msg-thread-container");           
+                var chatDivHeight = document.getElementsByClassName("user-messages")[0].scrollHeight;
+                
+            $('.user-messages').animate({scrollTop:chatDivHeight}, 'slow');
             }
             else{
                 $("#error-msg-message").text(response.message);
             }
+            $("#text-msg").val('');
         });    
     }
     

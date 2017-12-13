@@ -418,21 +418,25 @@
 }
 
 #profile-name{
-    margin-top: 3em;
-    margin-left: 0.1em;
-    font-size: x-large;
-    color: white;
+    /*margin-top: 3em;
+    
+    */
+    margin-left: 2.5em;
     text-transform: capitalize;
     -webkit-text-stroke: .3px lightgrey;
+    font-size: x-large;
+    color: white;
+    font-size: 20px;
+    height: 70px;
 }
 
 .profile-picture{
   height: 160px;
     border: 1px solid grey;
     padding: 5px;
-    margin-top: -35px;
+    margin-top: -120px;
     background: white;
-    position: absolute;
+    
     width: 165px;
 }
 
@@ -676,7 +680,7 @@ div.cell {
 }
 
 .user-messages{
-  height: 60vh;
+  height: 59vh;
   overflow: scroll;
 }
 .user-names{
@@ -688,7 +692,7 @@ div.cell {
   border-top: 1px solid lightgrey;
   margin: 0px;
   padding-top:6px;
-  position: absolute;
+  
   bottom: 10px;
   width: 100%;
   display: none;
