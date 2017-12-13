@@ -191,6 +191,7 @@ $(window).load(function() {
                 document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
                 document.getElementById('lat').value = response.data.Latitude;
                 document.getElementById('long').value = response.data.Longitude;
+                document.getElementById('listing-id').value = response.data.ID;
 
                 // loading maps
 
@@ -498,7 +499,8 @@ function sendMsgToAgent(){
 }
 
 function markFavourite(markFavourite){
-    var listingId = getParameterValues("listing_id");
+    //var listingId = getParameterValues("listing_id");
+    var listingID = parseInt($("#listing-id").val());
     var userId = getUserInfo().UserId;
 
     markUnmarkListing(listingId, markFavourite, userId).then(function(data){

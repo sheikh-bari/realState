@@ -309,6 +309,7 @@ $(document).ready(function() {
                 document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
                 document.getElementById('lat').value = response.data.Latitude;
                 document.getElementById('long').value = response.data.Longitude;
+                document.getElementById('listing-id').value = response.data.ID;
                 
                 $('#mark-favourite').hide();
                 $('#unmark-fav').hide();

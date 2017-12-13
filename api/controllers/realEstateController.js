@@ -2,6 +2,7 @@
 
 /**
 * @author Copyright Guda Praveen Kumar.
+*
 */
 
 const fs = require('fs');
@@ -397,7 +398,7 @@ var listing = module.exports = {};
           res.status( HTTP.OK ).jsonp( err );
       });
     }else{
-      models.sequelize.query(" delete from `fa17g19`.`favouriteads` where `RealEstateAdID` = " + req.body.AdID + " and `UserUserId` = " + req.body.UserID + " ; ", 
+      models.sequelize.query(" delete from `fa17g19`.`FavouriteAds` where `RealEstateAdID` = " + req.body.AdID + " and `UserUserId` = " + req.body.UserID + " ; ", 
       { type: models.sequelize.QueryTypes.DELETE}).then(favorite => {    
         if(favorite !== null && favorite !== '') {
           logger.info ( STRINGS.RESULT_SUCCESS );
