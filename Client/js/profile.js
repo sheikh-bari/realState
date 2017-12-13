@@ -253,10 +253,10 @@ $(document).ready(function() {
         if (deleteConfirm) {
             console.log('deleted');
             deleteAdListing(id).then(function(data){
-                if(response.success == false){
+                if(data.success == false){
                     
                 }
-                else if(response){
+                else if(data){
                     loadAgentListings();
                     showToaster('Profile updated successfully', 'success');
                 }
@@ -407,14 +407,14 @@ $(document).ready(function() {
                 $('#listing-type').val(response.data.AdTypeId);
                 $('#listing-category').val(response.data.RealEstateCategoryId);
                 $('#listing-noOfFloors').val(response.data.NumOfFloors);
-                //$('#listing-parking').val(response.data.Parking);
+                $('#listing-parking').val(response.data.Parking);
                 var parking = response.data.Parking+''
                 document.getElementById('listing-parking').value = response.data.Parking;
                 $('#listing-price').val(response.data.Price);
                 $('#listing-door').val(response.data.Address);
                 $('#listing-city').val(response.data.City);
                 $('#listing-state').val(response.data.State);
-                $('#listing-country').val(response.data.Country);
+                
                 $('#listing-zip').val(response.data.Zip);
                 $('.listing-new-btn').css("display", "none");
                 $('.listing-update-btn').attr("data", response.data.ID);
@@ -470,7 +470,6 @@ $(document).ready(function() {
         data.Address = $('#listing-door').val();
         data.City = $('#listing-city').val();
         data.State = $('#listing-state').val();
-        data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
 
         data.Latitude = $('#listing-latitude').val();
@@ -525,7 +524,6 @@ $(document).ready(function() {
         data.Address = $('#listing-door').val();
         data.City = $('#listing-city').val();
         data.State = $('#listing-state').val();
-        data.Country = $('#listing-country').val();
         data.Zip = $('#listing-zip').val();
         data.AdStatus = $('#listing-status').val();
         data.Latitude = $('#listing-latitude').val();
