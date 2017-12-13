@@ -173,7 +173,7 @@ $(window).load(function() {
             $('#body-content').load("partials/_listingDetails.html", function(){
                
                 document.getElementById('listing-heading').innerHTML = response.data.Title;
-                $(".realestateAd-status").html('Available');
+                // $(".realestateAd-status").html('Available');
                 document.getElementById('listing-description').innerHTML = response.data.AdDescription;
                 document.getElementById('listing-beds').innerHTML = response.data.BedRooms;
                 document.getElementById('listing-baths').innerHTML = response.data.BathRooms;
@@ -188,6 +188,15 @@ $(window).load(function() {
                 document.getElementById('listing-address-zip').innerHTML = response.data.Zip;
                 document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
                 document.getElementById('agent-title').innerHTML=response.data.AgentName;
+                document.getElementById('listing-livingRoom').innerHTML = response.data.LivingRooms;
+                document.getElementById('listing-lot-area').innerHTML = response.data.LotArea;
+                document.getElementById('listing-numberFloors').innerHTML = response.data.NumOfFloors;
+                if(response.data.Parking == 1){
+                    document.getElementById('listing-parking').innerHTML = "yes";
+                }else{
+                    document.getElementById('listing-parking').innerHTML = "no";
+                }
+                
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
                 document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
                 document.getElementById('lat').value = response.data.Latitude;
@@ -474,7 +483,7 @@ function postMessage(){
                 var msg = {SenderImage : userInfo.UserImagePath , MessageText : msgText, MsgDate : "now"};
                 $('<div/>').loadTemplate($("#msg-template-sender"), msg, { append: true, elemPerPage: 10 }).appendTo("#msg-thread-container");           
                 var chatDivHeight = document.getElementsByClassName("user-messages")[0].scrollHeight;
-                
+
             $('.user-messages').animate({scrollTop:chatDivHeight}, 'slow');
             }
             else{

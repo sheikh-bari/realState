@@ -837,4 +837,7 @@ div.cell {
         margin-top: 20px;
         color: #2c5ca5;
     }
-    
+    .actionBtns{
+      text-align: right;
+      display: none;
+    }

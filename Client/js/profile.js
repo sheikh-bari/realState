@@ -2,6 +2,7 @@ $(document).ready(function() {
 
     var userInfo = getUserInfo();
     var userType = '', userId = '';
+    // if the user is not logged and try to access page then redirecting to home page.
     if(userInfo){
         userType = userInfo.UserTypeId;
         userId = userInfo.UserId;
@@ -13,11 +14,12 @@ $(document).ready(function() {
         window.location.href = BASE_URL;
     }
 
-
+    //  checking the user if he is not agent he cannot create listing
     if(userType == 1){
         $('.add-new-listing').css("display", "none");
     }
 
+    // Gets the list of listings which are added by agent.
     function loadAgentListings(){
         getUserListings(userId, userType).then(function(data){
             $('.myprofile-content').load("partials/_listingCard.html", function(){
@@ -30,24 +32,34 @@ $(document).ready(function() {
                         template.attr('style',"display:block;");
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
-                        //template.find(".realestateAd-status")[0].innerHTML = "Available";
                         template.find(".realestateAd-type")[0].innerHTML = response[i].AdType.AdTypeName;
-                        //template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
+                        
                         template.find(".realEstateBeds")[0].innerHTML = response[i].BedRooms || '3 Beds';
                         template.find(".realEstateType")[0].innerHTML = response[i].RealEstateCategory.CategoryName;
                         template.find(".realEstateAddress")[0].innerHTML = response[i].City+", "+response[i].State+", 36037.";
-                        //template.find(".realEstateCity")[0].innerHTML = response[i].City;
-                        //template.find(".realEstateState")[0].innerHTML = response[i].State;
+                        
                         template.find(".btn-link")[0].innerHTML = "<a href='javascript:' id=listing-link-"+i+" data="+response[i].Id+" class='hvr-sweep-to-right more view-listing-details'>See Details</a>";
 
                         template.find(".adImage")[0].innerHTML = "<img id=listing-image-"+i+" class='listing-image view-listing-details' src='" + response[i].AdMedia[0].ImagePath + "' data="+response[i].Id+" alt=''> <span class='four listing-price'>$"+response[i].Price+"</span>";
+                        if(userType == 2){
+                           template.find(".actionBtns")[0].innerHTML = "<span id=edit-listingBtn-"+i+" class='label label-primary edit-listing' data="+response[i].Id+">Edit</span> &nbsp;<span id=delete-listingBtn-"+i+" class='label label-danger delete-listing' data="+response[i].Id+">Delete</span>"; 
+                        }
+                        
                         var exe = template.find(".adImage")[0];
+
                         // after adding all details appending the template
                         template.appendTo(".appendHere");
                     }
                     
                     if(userType == 2){
+                        console.log(document.getElementsByClassName('actionBtns'));
+                        document.getElementsByClassName('actionBtns')[0].style.display = 'block';
+                        var actionLinks = document.getElementsByClassName('actionBtns');
 
+                        for(var i=0;i < actionLinks.length;i++) {
+                            actionLinks[i].style.display = 'block';
+                            
+                        };
                         var deleteListingLinks = document.getElementsByClassName("delete-listing");
                         var editListingLinks = document.getElementsByClassName("edit-listing");
 
@@ -245,6 +257,7 @@ $(document).ready(function() {
                     
                 }
                 else if(response){
+                    loadAgentListings();
                     showToaster('Profile updated successfully', 'success');
                 }
             })
@@ -277,7 +290,7 @@ $(document).ready(function() {
     }
 
 
-
+    // Getting the listing details and displaying them.
     function listingDetails(val){
         var userInfo = getUserInfo();
         console.log(val);
@@ -303,7 +316,16 @@ $(document).ready(function() {
                 $('#listing-address-city').html(response.data.City);
                 $('#listing-address-state').html(response.data.State);
                 $('#listing-address-zip').html(response.data.Zip);
-                document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
+
+                $('#listing-livingRoom').html(response.data.LivingRooms);
+                $('#listing-lot-area').html(response.data.LotArea);
+                $('#listing-numberFloors').html(response.data.NumOfFloors);
+                if(response.data.Parking == 1){
+                    $('#listing-parking').html("yes");
+                }else{
+                    $('#listing-parking').html("no");
+                    }
+                document.getElementById('#listing-primary-image').src=response.data.AdMedia[0].ImagePath;
                 $('#agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
                 document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
@@ -397,6 +419,7 @@ $(document).ready(function() {
                 $('.listing-new-btn').css("display", "none");
                 $('.listing-update-btn').attr("data", response.data.ID);
                 $('.listing-update-btn').attr("id", 'listing-update-'+response.data.ID);
+                $('.uploadfile').css("display", "none");
                 var updateListingBtn = document.getElementsByClassName("listing-update-btn");
 
                 for(var i=0;i < updateListingBtn.length;i++) {
@@ -455,6 +478,16 @@ $(document).ready(function() {
 
         data.AgentId = userInfo.UserId;
 
+        for(var key in data){
+            console.log(key,'=', data[key]);
+            if(data[key] == ''){
+                var errMsg = "Please enter "+ key;
+                $("#error-msg").text(errMsg);
+
+                return;
+            }
+        }
+
         //data.Images = listingFiles;
 
         console.log( 'after creating =',data);
@@ -499,6 +532,17 @@ $(document).ready(function() {
         data.Longitude = $('#listing-longitude').val();
         data.AgentId = userInfo.UserId;
         data.ID = listingId;
+
+        for(var key in data){
+            console.log(key,'=', data[key]);
+            if(data[key] == ''){
+                var errMsg = "Please enter "+ key;
+                $("#error-msg").text(errMsg);
+
+                return;
+            }
+        }
+
         saveEditedLisitng(data).then(function(data){
            console.log('response after updating listing=', data);
             var response = data;
@@ -515,8 +559,12 @@ $(document).ready(function() {
 });
 
 var listingFiles = [];
+
 function checkUploadedFile(){
-        var x = this//document.getElementById("listing-fileUpload");
+
+        var x = document.getElementById('listing-fileUpload');
+        console.log(x);
+
         var txt = "";
         if ('files' in x) {
 
@@ -525,21 +573,30 @@ function checkUploadedFile(){
                 txt = "Select one or more files.";
             } else {
                 for (var i = 0; i < x.files.length; i++) {
-                    listingFiles.push(x.files[i]);
-                    txt += "<br><strong>" + (i+1) + ". file</strong><br>";
-                    var file = x.files[i];
-                    if ('name' in file) {
-                        txt += "name: " + file.name + "<br>";
+                   
+                    if(x.files[i].type == 'image/png' || x.files[i].type == 'image/jpeg' || x.files[i].type == 'image/jpg'){
+                         listingFiles.push(x.files[i]);
+                          txt += "<br><strong>" + (i+1) + ". file</strong><br>";
+                        var file = x.files[i];
+                        if ('name' in file) {
+                            txt += "name: " + file.name + "<br>";
+                        }
+                        if ('size' in file) {
+                            txt += "size: " + file.size + " bytes <br>";
+                        }
+                    }else{
+                        $("#error-msg").text('Please upload valid files like ".jpg", ".jpeg", ".png"');
+                        document.getElementById('listing-fileUpload').value = '';
                     }
-                    if ('size' in file) {
-                        txt += "size: " + file.size + " bytes <br>";
-                    }
+                   
                 }
             }
         } 
         document.getElementById("listing-images").innerHTML = txt;
 
     }
+
+    // initializing the map for displaying it.
 
 var map, infoWindow;
 function initMap() {

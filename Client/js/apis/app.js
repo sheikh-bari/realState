@@ -150,11 +150,11 @@ function updateUserDetails(fname, lname, email, mobile, address, userId){
 };
 
 function deleteAdListing(listingId){
-    var _data = {id:listingId};
+    var _data = {Id:listingId};
     var deferred = new $.Deferred();
     $.ajax({
-        url: API_ENDPOINT+'api/listing/delete',
-        method: 'DELETE',
+        url: API_ENDPOINT+'api/realEstateController/deleteListing',
+        method: 'POST',
         data: JSON.stringify(_data),
         dataType: "json",
         contentType: 'application/json',
