@@ -94,8 +94,7 @@ var listing = module.exports = {};
       var adMediaTable = {
         model: models.AdMedia,
         duplicating: false,
-        attributes: ['ImagePath'],
-        where: {AdStatusId: {[OP.ne]: 3}}
+        attributes: ['ImagePath']
       };
 
       includeQuery.push(adMediaTable);
@@ -103,20 +102,18 @@ var listing = module.exports = {};
       var typeOfAccomodationQuery = {
         model: models.RealEstateCategory,
         duplicating: false,
-        attributes: ['CategoryName'],
-        where: {AdStatusId: {[OP.ne]: 3}}
+        attributes: ['CategoryName']
       };
       var adTypeQuery = {
         model: models.AdType,
         duplicating: false,
-        attributes: ['AdTypeName'],
-        where: {AdStatusId: {[OP.ne]: 3}}
+        attributes: ['AdTypeName']
       };
 
       if ( req.body.searchText.trim() !== '' && req.body.searchText !== null && req.body.searchText !== undefined ) {
 
         searchTextQuery = {
-          $and:[{
+          //$and:[
             $or:[
               {
                 city: {
@@ -133,11 +130,11 @@ var listing = module.exports = {};
                   [OP.like]: '%'+req.body.searchText+'%'
                 }
               }
-            ]},
+            ]/*,
             [
                 {AdStatusId: {[OP.ne]: 3}}
             ]
-          ]
+          ]*/
         };
       }
 
