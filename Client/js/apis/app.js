@@ -153,7 +153,7 @@ function deleteAdListing(listingId){
     var _data = {Id:listingId};
     var deferred = new $.Deferred();
     $.ajax({
-        url: API_ENDPOINT+'api/realEstateController/deleteListing',
+        url: API_ENDPOINT+'api/deleteListing',
         method: 'POST',
         data: JSON.stringify(_data),
         dataType: "json",
