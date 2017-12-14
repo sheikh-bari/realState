@@ -585,7 +585,7 @@ div.cell {
 }
 
 .myprofile-content{
-  padding-top:20px;
+  /*padding-top:20px;*/
 }
 
 .roundEdgedLabels{
@@ -680,12 +680,14 @@ div.cell {
 }
 
 .user-messages{
-  height: 59vh;
-  overflow: scroll;
+  height: 66vh;
+  overflow: auto;
+  overflow-x: hidden;
 }
 .user-names{
-  height:67vh;
-  overflow: scroll;
+  height:71vh;
+  overflow: auto;
+  overflow-x: hidden;
 }
 
 .input-message{

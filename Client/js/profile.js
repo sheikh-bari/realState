@@ -325,12 +325,13 @@ $(document).ready(function() {
                 }else{
                     $('#listing-parking').html("no");
                     }
-                document.getElementById('#listing-primary-image').src=response.data.AdMedia[0].ImagePath;
+                document.getElementById('listing-primary-image').src=response.data.AdMedia[0].ImagePath;
                 $('#agent-title').innerHTML=response.data.AgentName;
                 document.getElementById('agent-title').setAttribute("data", response.data.AgentId);
                 document.getElementById('agent-picture').setAttribute("src", response.data.AgentImage);
                 document.getElementById('lat').value = response.data.Latitude;
                 document.getElementById('long').value = response.data.Longitude;
+                document.getElementById('listing-id').value = response.data.ID;
                 
                 $('#mark-favourite').hide();
                 $('#unmark-fav').hide();
