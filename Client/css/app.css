@@ -2,14 +2,14 @@
   width: 70%;
     padding: 11px;
     font-size: large;
-    border: solid 2px #27da93;
+    /*border: solid 2px #f44336;*/
     display: inline-block !important;
 
 }
 .searcBtn{
     height: 35px;
     padding: 0px 16px;
-    background-color: #27da93;
+    background-color: #f44336;
     color: #FFF;
 }
 
@@ -26,7 +26,7 @@
     padding: 0 0 0.3em;
 }
 .home-caption h3 span{
-  border-bottom: 7px solid #27DA93;
+  border-bottom: 7px solid #f44336;
 }
 .home-caption p{
   color: #fff;
@@ -48,7 +48,7 @@
     padding: 0 0 0.3em;
 }
 .caption h3 span{
-  border-bottom: 7px solid #27DA93;
+  border-bottom: 7px solid #f44336;
 }
 .caption p{
   color: #fff;
@@ -109,7 +109,7 @@
   height:140px;
   border-radius: 50%;
   padding: 3px;
-  border: 1.5px solid #27DA93;
+  border: 1.5px solid #f44336;
 }
 .companyName{
   color: grey;
@@ -459,7 +459,7 @@
   border-bottom: 1px solid grey;
 }
 .active-tab{
-  background: #27da93;
+  background: #f44336;
 }
 
 
@@ -511,6 +511,12 @@ border-bottom: 1px solid #dedede;
 
 .chatDateTime{
     color: grey;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.chatDateTimeReceiver{
+    color: #FFF;
     font-size: 11px;
     margin-top: 4px;
 }
@@ -613,7 +619,7 @@ div.cell {
 
 .agent-image{
       padding: 2px;
-    border: 2px solid #28db93;
+    border: 2px solid #f44336;
     border-radius: 50%;
       width: 175px;
     margin-top: 12px;
@@ -711,8 +717,9 @@ div.cell {
 .receiver-message{
   padding:4px 12px;
   width: fit-content;
-  background: #28db938c;
+  background: #f44336;
   border-radius: 0px 14px 0px 14px;
+  color: #FFF;
 }
 
 .sender-message{

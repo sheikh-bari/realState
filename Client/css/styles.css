@@ -206,7 +206,7 @@ nav ul { list-style: none; padding: 0;margin: 0; }
     text-decoration: none;
 }
  nav ul li a:hover {   
-	color:#27da93 !important;
+	color:#f44336 !important;
 	background: none !important;
 }
 .indicator { position: absolute; right: 0 !important; }
