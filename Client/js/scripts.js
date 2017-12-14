@@ -109,7 +109,7 @@ $(window).load(function() {
 
                         template.find(".listing-title")[0].innerHTML = "<div id=listing-"+i+" class='view-listing-details' data='" +response[i].Id+ "'>" + response[i].Title + "</div>";
                         //template.find(".realestateAd-status")[0].innerHTML = "Available";
-                        template.find(".realestateAd-type")[0].innerHTML = response[i].AdType.AdTypeName;
+                        template.find(".realestateAd-type")[0].innerHTML = response[i].AdStatusId == 1 ? 'Available' : 'Sold Out';
                         //template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
                         template.find(".realEstateBeds")[0].innerHTML = response[i].BedRooms + ' Beds';
                         template.find(".realEstateType")[0].innerHTML = response[i].RealEstateCategory.CategoryName;

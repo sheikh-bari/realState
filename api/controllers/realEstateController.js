@@ -50,7 +50,7 @@ var listing = module.exports = {};
 
       models.RealEstateAd.findAll({
         where: {AdStatusId: {[OP.ne]: 3}},
-        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude', 'BedRooms' , 'Zip' ],
+        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude', 'BedRooms' , 'Zip', 'AdStatusId' ],
         order: [['createdAt','DESC']],
         include: [
           {
@@ -178,7 +178,7 @@ var listing = module.exports = {};
       ];
 
       models.RealEstateAd.findAll({
-        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude', 'BedRooms' , 'Zip' ],
+        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude', 'BedRooms' , 'Zip', 'AdStatusId' ],
         order: [['createdAt','DESC']],
         where: searchTextQuery,
         include: includeQuery,
@@ -603,8 +603,8 @@ var listing = module.exports = {};
      createdAt: date.now,
      updatedAt: date.now,
     Latitude: req.body.Latitude,
-    Longitude: req.body.Longitude
-    
+    Longitude: req.body.Longitude,
+    AdStatusId: req.body.AdStatusId
     }, {
       where: {
         $and: [{ID: {[OP.eq]: req.body.ID}}, {AgentId: {[OP.eq]: req.body.AgentId}}]

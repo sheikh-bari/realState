@@ -409,6 +409,7 @@ $(document).ready(function() {
                 $('#listing-category').val(response.data.RealEstateCategoryId);
                 $('#listing-noOfFloors').val(response.data.NumOfFloors);
                 $('#listing-parking').val(response.data.Parking);
+                $('#listing-status').val(response.data.AdStatusId);
                 var parking = response.data.Parking+''
                 document.getElementById('listing-parking').value = response.data.Parking;
                 $('#listing-price').val(response.data.Price);
@@ -518,9 +519,9 @@ $(document).ready(function() {
         data.SquareFeet = $('#listing-area').val();
         data.LotArea = $('#listing-lotArea').val();
         data.NumOfFloors = $('#listing-noOfFloors').val();
-        data.Parking = $('#listing-noOfFloors').val();
-        data.AdTypeName = $('#listing-type').val();
-        data.RealEstateCategory = $('#listing-category').val();
+        data.Parking = $('#listing-parking option:selected').val();
+        data.AdTypeName = $('#listing-type option:selected').val();
+        data.RealEstateCategory = $('#listing-category option:selected').val();
         data.Price = $('#listing-price').val();
         data.Address = $('#listing-door').val();
         data.City = $('#listing-city').val();
@@ -531,6 +532,7 @@ $(document).ready(function() {
         data.Longitude = $('#listing-longitude').val();
         data.AgentId = userInfo.UserId;
         data.ID = listingId;
+        data.AdStatusId = $('#listing-status option:selected').val();
 
         for(var key in data){
             console.log(key,'=', data[key]);
