@@ -111,9 +111,9 @@ $(window).load(function() {
                         //template.find(".realestateAd-status")[0].innerHTML = "Available";
                         template.find(".realestateAd-type")[0].innerHTML = response[i].AdType.AdTypeName;
                         //template.find(".realEstatePrice")[0].innerHTML =  response[i].Price;
-                        template.find(".realEstateBeds")[0].innerHTML = response[i].BedRooms || '3 Beds';
+                        template.find(".realEstateBeds")[0].innerHTML = response[i].BedRooms + ' Beds';
                         template.find(".realEstateType")[0].innerHTML = response[i].RealEstateCategory.CategoryName;
-                        template.find(".realEstateAddress")[0].innerHTML = response[i].City+", "+response[i].State+", 36037.";
+                        template.find(".realEstateAddress")[0].innerHTML = response[i].City+", "+response[i].State+", " + response[i].Zip + ".";
                         //template.find(".realEstateCity")[0].innerHTML = response[i].City;
                         //template.find(".realEstateState")[0].innerHTML = response[i].State;
                         template.find(".btn-link")[0].innerHTML = "<a href='javascript:' id=listing-link-"+i+" data="+response[i].Id+" class='hvr-sweep-to-right more view-listing-details'>See Details</a>";

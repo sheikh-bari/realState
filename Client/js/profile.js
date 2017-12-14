@@ -36,7 +36,7 @@ $(document).ready(function() {
                         
                         template.find(".realEstateBeds")[0].innerHTML = response[i].BedRooms || '3 Beds';
                         template.find(".realEstateType")[0].innerHTML = response[i].RealEstateCategory.CategoryName;
-                        template.find(".realEstateAddress")[0].innerHTML = response[i].City+", "+response[i].State+", 36037.";
+                        template.find(".realEstateAddress")[0].innerHTML = response[i].City+", "+response[i].State+", " + response[i].Zip + ".";
                         
                         template.find(".btn-link")[0].innerHTML = "<a href='javascript:' id=listing-link-"+i+" data="+response[i].Id+" class='hvr-sweep-to-right more view-listing-details'>See Details</a>";
 

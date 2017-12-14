@@ -50,7 +50,7 @@ var listing = module.exports = {};
 
       models.RealEstateAd.findAll({
         where: {AdStatusId: {[OP.ne]: 3}},
-        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude' ],
+        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude', 'BedRooms' , 'Zip' ],
         order: [['createdAt','DESC']],
         include: [
           {
@@ -178,7 +178,7 @@ var listing = module.exports = {};
       ];
 
       models.RealEstateAd.findAll({
-        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude' ],
+        attributes: ['Id', 'Title', 'AdDescription', 'Price', 'City', 'State', 'Address', 'Latitude', 'Longitude', 'BedRooms' , 'Zip' ],
         order: [['createdAt','DESC']],
         where: searchTextQuery,
         include: includeQuery,
