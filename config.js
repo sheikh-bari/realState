@@ -32,7 +32,7 @@ config.getMostFollowedListsCount = 5;
 config.getMostLikedListCount = 10;
 
 
-config.dbPath = ( config.app.mode.current == config.app.mode.DEVELOPMENT) ? 'mysql://sql9215649@sql9.freemysqlhosting.net:3306/Nbna53437g' : 'mysql://sql9215649@sql9.freemysqlhosting.net:3306/Nbna53437g';
+config.dbPath = ( config.app.mode.current == config.app.mode.DEVELOPMENT) ? 'mysql://sql9215649:Nbna53437g@sql9.freemysqlhosting.net:3306/sql9215649' : 'mysql://sql9215649:Nbna53437g@sql9.freemysqlhosting.net:3306/sql9215649';
 config.db = {}
 config.db.host = config.dbPath;
 
